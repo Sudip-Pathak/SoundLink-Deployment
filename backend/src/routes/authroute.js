@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getCurrentUser, forgotPassword, resetPassword, verifyOTP, resendOTP } from "../controllers/authController.js";
+import { register, login, getCurrentUser, forgotPassword, resetPassword } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import multer from "multer";
 import { v2 as cloudinary } from 'cloudinary';
@@ -67,8 +67,6 @@ router.get("/me", protect, getCurrentUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
-// OTP routes
-router.post("/verify-otp", verifyOTP);
-router.post("/resend-otp", resendOTP);
+// OTP routes removed
 
 export default router; 

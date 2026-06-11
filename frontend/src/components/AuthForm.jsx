@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { FaUser, FaLock, FaEnvelope, FaUserCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import ForgotPasswordForm from "./ForgotPasswordForm";
-import OTPVerificationForm from "./OTPVerificationForm";
+// Removed OTP verification form import
 
 // Default avatars for user selection
 const DEFAULT_AVATARS = [
@@ -61,11 +61,6 @@ const AuthForm = ({ mode = "login", returnTo }) => {
           setSuccess("Welcome back!");
           const destination = isAdminRegistration ? location.pathname : (returnTo || "/");
           setTimeout(() => navigate(destination), 500);
-        } else if (result.requiresVerification) {
-          setUserId(result.userId);
-          setCurrentMode("verify-otp");
-          setError("Please verify your email to continue.");
-        } else {
           setError(result.message || "Invalid credentials");
         }
       } else if (currentMode === "register") {
@@ -100,15 +95,12 @@ const AuthForm = ({ mode = "login", returnTo }) => {
         console.log("Registration result:", result); // Add logging to debug
         if (result.success) {
           console.log("Registration successful, userId:", result.userId); // Add logging
-          setUserId(result.userId);
-          setCurrentMode("verify-otp");
+          setSuccess("Registration successful! You can now log in.");
+          setForm({ username: "", email: "", password: "", confirmPassword: "" });
+          setCurrentMode("login");
         } else {
           setError(result.message || "Registration failed");
         }
-      } else if (currentMode === "verify-otp") {
-        // OTP verification logic
-        // This is a placeholder and should be implemented
-        setError("OTP verification logic not implemented");
       }
     } catch (err) {
       console.error("Auth error:", err);
@@ -120,11 +112,6 @@ const AuthForm = ({ mode = "login", returnTo }) => {
 
   if (currentMode === "forgot-password") {
     return <ForgotPasswordForm onBack={() => setCurrentMode("login")} />;
-  }
-
-  if (currentMode === "verify-otp") {
-    console.log("Rendering OTP form with userId:", userId); // Add logging
-    return <OTPVerificationForm userId={userId} onBack={() => setCurrentMode("login")} />;
   }
 
   return (

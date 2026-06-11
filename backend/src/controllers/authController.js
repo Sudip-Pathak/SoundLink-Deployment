@@ -6,166 +6,7 @@ import nodemailer from "nodemailer";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-// Generate OTP
-const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-// Send OTP Email
-const sendOTPEmail = async (email, otp, username) => {
-  const transporterConfig = process.env.SMTP_HOST === 'smtp.gmail.com' 
-    ? {
-        service: 'gmail',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        }
-      }
-    : {
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_SECURE === "true",
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      };
-
-  const transporter = nodemailer.createTransport(transporterConfig);
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to: email,
-    subject: "🎵 SoundLink - Verify Your Email",
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Verify Your Email</title>
-        <style>
-          body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          .email-wrapper {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          }
-          .header {
-            background: linear-gradient(90deg, #ff2e63 0%, #ff6b6b 100%);
-            padding: 30px;
-            text-align: center;
-          }
-          .header h1 {
-            color: white;
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-          }
-          .content {
-            padding: 40px 30px;
-            background-color: #ffffff;
-          }
-          .message {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 25px;
-          }
-          .otp-code {
-            background: #f8f9fa;
-            border: 2px dashed #ff2e63;
-            padding: 20px;
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: #ff2e63;
-            margin: 20px 0;
-            letter-spacing: 5px;
-          }
-          .footer {
-            background-color: #1a1a1a;
-            color: #888;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-          }
-          .note {
-            background-color: #f8f9fa;
-            border-left: 4px solid #ff2e63;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: #666;
-          }
-          .logo {
-            font-size: 32px;
-            margin-bottom: 15px;
-          }
-          .wave {
-            color: #ff2e63;
-            animation: wave 2s infinite;
-            display: inline-block;
-          }
-          @keyframes wave {
-            0% { transform: rotate(0deg); }
-            10% { transform: rotate(14deg); }
-            20% { transform: rotate(-8deg); }
-            30% { transform: rotate(14deg); }
-            40% { transform: rotate(-4deg); }
-            50% { transform: rotate(10deg); }
-            60% { transform: rotate(0deg); }
-            100% { transform: rotate(0deg); }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="email-wrapper">
-            <div class="header">
-              <div class="logo">🎵</div>
-              <h1>SoundLink</h1>
-            </div>
-            <div class="content">
-              <div class="message">
-                <p>Hello ${username},</p>
-                <p>Welcome to SoundLink! Please use the following OTP to verify your email address:</p>
-              </div>
-              <div class="otp-code">
-                ${otp}
-              </div>
-              <div class="note">
-                <p><strong>Note:</strong> This OTP will expire in 10 minutes.</p>
-                <p>If you didn't create an account with SoundLink, you can safely ignore this email.</p>
-              </div>
-              <div class="message">
-                <p>Keep the music playing!</p>
-                <p>The SoundLink Team <span class="wave">🎵</span></p>
-              </div>
-            </div>
-            <div class="footer">
-              <p>© ${new Date().getFullYear()} SoundLink. All rights reserved.</p>
-              <p>Your ultimate music streaming platform</p>
-            </div>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-  });
-};
+// OTP functionality removed
 
 // Register a new user
 export const register = async (req, res) => {
@@ -193,10 +34,6 @@ export const register = async (req, res) => {
       }
     }
     
-    // Generate OTP
-    const otp = generateOTP();
-    const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
-    
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     
@@ -207,12 +44,8 @@ export const register = async (req, res) => {
       password: hashedPassword,
       role: role || "user",
       clerkId: `manual_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
-      otp: {
-        code: otp,
-        expires: otpExpiry,
-        verified: false
-      },
-      isVerified: false
+      isVerified: true,
+      isEmailVerified: true
     };
     
     // Add avatar path if file was uploaded
@@ -224,18 +57,9 @@ export const register = async (req, res) => {
     const user = new userModel(userData);
     await user.save();
     
-    // Send OTP email with fallback if SMTP fails
-    try {
-      await sendOTPEmail(email, otp, username);
-      console.log(`[AUTH] OTP email sent successfully to ${email}`);
-    } catch (emailError) {
-      console.error("[AUTH] Failed to send OTP email via SMTP:", emailError.message);
-      console.log(`\n==================================================\n[DEVELOPMENT] OTP for ${username} (${email}): ${otp}\n==================================================\n`);
-    }
-    
     res.status(201).json({ 
       success: true, 
-      message: "Registration successful. Please check your email for OTP verification.",
+      message: "Registration successful. You can now log in.",
       userId: user._id
     });
   } catch (error) {
@@ -244,112 +68,7 @@ export const register = async (req, res) => {
   }
 };
 
-// Verify OTP
-export const verifyOTP = async (req, res) => {
-  try {
-    const { userId, otp } = req.body;
-    
-    if (!userId || !otp) {
-      return res.status(400).json({ success: false, message: "User ID and OTP are required." });
-    }
-    
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found." });
-    }
-    
-    if (user.isVerified) {
-      return res.status(400).json({ success: false, message: "User is already verified." });
-    }
-    
-    if (!user.otp || !user.otp.code || !user.otp.expires) {
-      return res.status(400).json({ success: false, message: "Invalid OTP request." });
-    }
-    
-    if (user.otp.code !== otp) {
-      return res.status(400).json({ success: false, message: "Invalid OTP." });
-    }
-    
-    if (Date.now() > user.otp.expires) {
-      return res.status(400).json({ success: false, message: "OTP has expired." });
-    }
-    
-    // Update user verification status
-    user.isVerified = true;
-    user.isEmailVerified = true;
-    user.otp.verified = true;
-    await user.save();
-    
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
-    
-    res.json({
-      success: true,
-      message: "Email verified successfully.",
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar,
-        isEmailVerified: true
-      }
-    });
-  } catch (error) {
-    console.error("OTP verification error:", error);
-    res.status(500).json({ success: false, message: "OTP verification failed." });
-  }
-};
-
-// Resend OTP
-export const resendOTP = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    
-    if (!userId) {
-      return res.status(400).json({ success: false, message: "User ID is required." });
-    }
-    
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found." });
-    }
-    
-    if (user.isVerified) {
-      return res.status(400).json({ success: false, message: "User is already verified." });
-    }
-    
-    // Generate new OTP
-    const otp = generateOTP();
-    const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
-    
-    // Update user's OTP
-    user.otp = {
-      code: otp,
-      expires: otpExpiry,
-      verified: false
-    };
-    await user.save();
-    
-    // Send new OTP email with fallback if SMTP fails
-    try {
-      await sendOTPEmail(user.email, otp, user.username);
-      console.log(`[AUTH] Resent OTP email successfully to ${user.email}`);
-    } catch (emailError) {
-      console.error("[AUTH] Failed to send resend-OTP email via SMTP:", emailError.message);
-      console.log(`\n==================================================\n[DEVELOPMENT] Resent OTP for ${user.username} (${user.email}): ${otp}\n==================================================\n`);
-    }
-    
-    res.json({
-      success: true,
-      message: "New OTP has been sent to your email."
-    });
-  } catch (error) {
-    console.error("Resend OTP error:", error);
-    res.status(500).json({ success: false, message: "Failed to resend OTP." });
-  }
-};
+// OTP endpoints removed
 
 // Login user
 export const login = async (req, res) => {
@@ -364,14 +83,8 @@ export const login = async (req, res) => {
     }
 
     // Check if user is verified
-    if (!user.isVerified) {
-      return res.status(403).json({ 
-        success: false, 
-        message: "Please verify your email first.",
-        userId: user._id,
-        requiresVerification: true
-      });
-    }
+    // Removed verification block since OTP is disabled
+
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
