@@ -1,37 +1,43 @@
-# Vercel Deployment Walkthrough
+# Deployment Walkthrough: Render (Backend) + Vercel (Frontend)
 
-I've successfully configured your codebase to be ready for deployment on Vercel. Because your project is a monorepo containing both an Express backend and a Vite frontend, I've set it up so you can easily deploy them as two separate Vercel projects from the same GitHub repository.
+I've reverted the Vercel-specific backend configuration so that your Express app is optimized to deploy directly on Render as a standard background service, while the frontend remains fully compatible with Vercel!
 
 ## What Was Changed
-- **`backend/server.js`**: Adjusted the file so that it exports the Express `app` directly for Vercel's Serverless environment, while still conditionally calling `app.listen()` for your local development.
-- **`backend/vercel.json`**: Created a configuration file specifically for the backend to instruct Vercel to route incoming requests to `server.js` using `@vercel/node`.
+- **`backend/server.js`**: Removed the Vercel serverless condition and export so the server naturally calls `app.listen()` and works beautifully on Render.
+- **`backend/package.json`**: Changed the `"start"` script to `node server.js` to prevent the app from crashing on Render if the local `.env` file isn't uploaded.
+- **Removed `backend/vercel.json`**: This file is no longer needed since the backend won't be hosted on Vercel.
 
-## How to Deploy on Vercel
+## How to Deploy
 
-Follow these exact steps to deploy your application.
+Follow these exact steps to deploy your full stack application.
 
-### 1. Deploy the Backend First
+### 1. Deploy the Backend on Render
+1. Go to your Render Dashboard and create a new **Web Service**.
+2. Connect your `Music-SoundLink` GitHub repository.
+3. In the configuration:
+   - **Root Directory**: `backend`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+4. Expand the **Environment Variables** section and add all your backend secrets (e.g., `MONGO_URI`, `CLOUDINARY_URL`, `JWT_SECRET`, etc.).
+5. Click **Create Web Service**.
+6. Once deployed, Render will provide a live URL (e.g., `https://music-soundlink-api.onrender.com`). **Copy this URL**.
+
+> [!IMPORTANT]
+> Make sure to update the `SERVER_URL` environment variable on Render to match your new Render URL so the `keepAlive` ping functions properly!
+
+### 2. Deploy the Frontend on Vercel
 1. Go to your Vercel Dashboard and click **Add New... > Project**.
-2. Import your `Music-SoundLink` GitHub repository.
+2. Import the `Music-SoundLink` GitHub repository.
 3. In the "Configure Project" screen:
-   - **Framework Preset**: Leave as `Other`.
-   - **Root Directory**: Click "Edit" and select the `backend` folder.
-   - **Environment Variables**: Add your backend environment variables (e.g., `MONGO_URI`, `CLOUDINARY_URL`, `JWT_SECRET`, etc.).
-4. Click **Deploy**.
-5. Once deployed, Vercel will give you a domain (e.g., `https://music-soundlink-backend.vercel.app`). **Copy this URL**.
-
-### 2. Deploy the Frontend
-1. Go back to your Vercel Dashboard and click **Add New... > Project**.
-2. Import the *exact same* `Music-SoundLink` GitHub repository again.
-3. In the "Configure Project" screen:
-   - **Framework Preset**: Select `Vite` (Vercel usually auto-detects this).
+   - **Framework Preset**: Select `Vite`.
    - **Root Directory**: Click "Edit" and select the `frontend` folder.
-   - **Environment Variables**: Add an environment variable named `VITE_BACKEND_URL` and paste the backend URL you copied in Step 1 (e.g., `VITE_BACKEND_URL=https://music-soundlink-backend.vercel.app`).
+   - **Environment Variables**: Add an environment variable named `VITE_BACKEND_URL` and paste the backend URL you copied from Render (e.g., `VITE_BACKEND_URL=https://music-soundlink-api.onrender.com`).
 4. Click **Deploy**.
 
 ## Verification
-- Your frontend should now be live on its own domain, and it will correctly make API requests to your serverless backend.
-- Local development (`npm run dev`) will continue to work exactly as it did before.
+- Your frontend will go live on Vercel and seamlessly connect to your Render backend via the `VITE_BACKEND_URL`.
+- Local development (`npm run dev`) remains unchanged and will continue to work perfectly.
 
 > [!TIP]
-> Make sure to add your frontend's new Vercel domain to your backend's CORS allowed origins array in `server.js` if it's not already there!
+> After deploying, don't forget to add your new Vercel frontend URL to the CORS allowed origins array in `backend/server.js` if you haven't already!

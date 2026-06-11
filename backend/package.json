@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "jest --runInBand",
-    "start": "node --env-file=.env server.js",
+    "start": "node server.js",
     "server": "nodemon --env-file=.env server.js"
   },
   "author": "",

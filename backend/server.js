@@ -100,17 +100,13 @@ app.get("/api/health", (req, res) => {
 
 app.get("/", (req, res) => res.send("Api Working"));
 
-if (process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1") {
-  app.listen(port, () => {
-    console.log(`Server started on ${port}`);
+app.listen(port, () => {
+  console.log(`Server started on ${port}`);
 
-    const isProduction = process.env.NODE_ENV === "production";
-    const serverUrl = isProduction
-      ? process.env.SERVER_URL || "https://your-render-app-url.onrender.com"
-      : `http://localhost:${port}`;
+  const isProduction = process.env.NODE_ENV === "production";
+  const serverUrl = isProduction
+    ? process.env.SERVER_URL || "https://your-render-app-url.onrender.com"
+    : `http://localhost:${port}`;
 
-    keepAlive(`${serverUrl}/api/health`, 14);
-  });
-}
-
-export default app;
+  keepAlive(`${serverUrl}/api/health`, 14);
+});
