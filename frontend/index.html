@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en" data-theme="spotify">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- Primary Meta Tags -->
+    <title>SoundLink - Premium Music Streaming Platform | Listen to Trending Songs & Albums</title>
+    <meta name="title" content="SoundLink - Premium Music Streaming Platform | Listen to Trending Songs & Albums">
+    <meta name="description" content="Discover and stream millions of songs, albums, and artists on SoundLink. High-quality music streaming with trending songs, movie albums, and personalized playlists. Free music streaming platform.">
+    <meta name="keywords" content="music streaming, online music, free music, trending songs, music albums, artists, playlists, audio streaming, music platform, SoundLink, music app, streaming service, songs, albums, artists, music discovery">
+    <meta name="author" content="SoundLink">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="distribution" content="global">
+    <meta name="rating" content="general">
+    <meta name="theme-color" content="#0F0F0F">
+    <meta name="msapplication-TileColor" content="#0F0F0F">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SoundLink">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.soundlink.live/">
+    <meta property="og:title" content="SoundLink - Premium Music Streaming Platform">
+    <meta property="og:description" content="Discover and stream millions of songs, albums, and artists on SoundLink. High-quality music streaming with trending songs, movie albums, and personalized playlists.">
+    <meta property="og:image" content="https://www.soundlink.live/icons/soundlink-icon-512.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="SoundLink Music Streaming Platform">
+    <meta property="og:site_name" content="SoundLink">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.soundlink.live/">
+    <meta property="twitter:title" content="SoundLink - Premium Music Streaming Platform">
+    <meta property="twitter:description" content="Discover and stream millions of songs, albums, and artists on SoundLink. High-quality music streaming with trending songs, movie albums, and personalized playlists.">
+    <meta property="twitter:image" content="https://www.soundlink.live/icons/soundlink-icon-512.png">
+    <meta property="twitter:image:alt" content="SoundLink Music Streaming Platform">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.soundlink.live/">
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://api.soundlink.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.soundlink.com">
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
+    <!-- Preload critical resources with correct 'as' attributes -->
+    <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/src/theme.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/icons/soundlink-icon-192.png?v=2" as="image" type="image/png">
+    <link rel="preload" href="/icons/soundlink-icon-512.png?v=2" as="image" type="image/png">
+    
+    <!-- Preload critical JavaScript -->
+    <link rel="modulepreload" href="/src/main.jsx">
+    <link rel="modulepreload" href="/src/App.jsx">
+    
+    <!-- Fallback for browsers that don't support preload -->
+    <noscript>
+      <link rel="stylesheet" href="/src/index.css">
+      <link rel="stylesheet" href="/src/theme.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    </noscript>
+    
+    <!-- Actually use the preloaded styles -->
+    <link rel="stylesheet" href="/src/index.css">
+    <link rel="stylesheet" href="/src/theme.css">
+    
+    <!-- Prioritize PNG icons over SVG for better browser compatibility -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/soundlink-icon-192.png?v=2" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/soundlink-icon-512.png?v=2" />
+    <link rel="icon" type="image/svg+xml" href="/icons/soundlink-icon.svg" />
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" href="/icons/soundlink-icon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/soundlink-icon-152.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/soundlink-icon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/soundlink-icon-152.png?v=2" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json?v=3" />
+    
+    <!-- Force cache refresh on updates - make sure it's deferred -->
+    <script src="/hard-refresh.js" defer></script>
+    
+    <!-- Load Google fonts with display=swap to prevent render blocking -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SoundLink",
+      "description": "Premium music streaming platform offering high-quality audio streaming, trending songs, albums, and artist discovery",
+      "url": "https://www.soundlink.live",
+      "applicationCategory": "MusicApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "SoundLink"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SoundLink",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.soundlink.live/icons/soundlink-icon-512.png"
+        }
+      },
+      "screenshot": "https://www.soundlink.live/assets/screenshot1.png",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      },
+      "featureList": [
+        "High-quality music streaming",
+        "Trending songs and albums",
+        "Artist discovery",
+        "Personalized playlists",
+        "Movie album collections",
+        "Cross-platform compatibility",
+        "Offline listening",
+        "Social sharing features"
+      ]
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SoundLink",
+      "url": "https://www.soundlink.live",
+      "logo": "https://www.soundlink.live/icons/soundlink-icon-512.png",
+      "description": "Premium music streaming platform",
+      "sameAs": [
+        "https://www.soundlink.live"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "url": "https://www.soundlink.live/contact"
+      }
+    }
+    </script>
+    
+    <!-- Website Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SoundLink",
+      "url": "https://www.soundlink.live",
+      "description": "Premium music streaming platform",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.soundlink.live/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <!-- Failsafe script to fix refresh loop issues -->
+    <script>
+      // Detect if we're in a refresh loop
+      (function() {
+        // Get page load timestamp
+        const now = Date.now();
+        const lastLoad = parseInt(localStorage.getItem('lastPageLoad') || '0');
+        const reloadCount = parseInt(localStorage.getItem('pageReloadCount') || '0');
+        
+        // If page loaded within last 2 seconds, increment counter
+        if (lastLoad && (now - lastLoad) < 2000) {
+          localStorage.setItem('pageReloadCount', (reloadCount + 1).toString());
+        } else {
+          // Reset counter if it's been more than 2 seconds
+          localStorage.setItem('pageReloadCount', '1');
+        }
+        
+        // Store current load time
+        localStorage.setItem('lastPageLoad', now.toString());
+        
+        // Only run emergency recovery if:
+        // 1. We've reloaded 4+ times in quick succession (more conservative)
+        // 2. We haven't already recovered recently (avoid showing message repeatedly)
+        const lastRecovery = parseInt(localStorage.getItem('lastEmergencyRecovery') || '0');
+        const recoveryThreshold = 4; // Increased from 3 to 4 to be less aggressive
+        
+        if (reloadCount >= recoveryThreshold && (now - lastRecovery > 30000)) {
+          console.log('Emergency refresh loop recovery activated');
+          
+          // Record this recovery to prevent multiple recoveries in short succession
+          localStorage.setItem('lastEmergencyRecovery', now.toString());
+          
+          // Clear auth tokens and counters
+          localStorage.removeItem('token');
+          localStorage.setItem('authAttemptCount', '0');
+          localStorage.setItem('pageReloadCount', '0');
+          localStorage.setItem('pageRefreshCount', '0');
+          
+          // Try to remove cookies
+          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          
+          // Unregister service workers
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for (let registration of registrations) {
+                registration.unregister();
+                console.log('Emergency service worker unregistration');
+              }
+            });
+          }
+          
+          // Clear caches
+          if ('caches' in window) {
+            caches.keys().then(function(cacheNames) {
+              cacheNames.forEach(function(cacheName) {
+                caches.delete(cacheName);
+                console.log('Emergency cache deletion: ', cacheName);
+              });
+            });
+          }
+          
+          // Show a message to the user after the page loads
+          window.addEventListener('DOMContentLoaded', function() {
+            // Delay showing the notification to ensure the page has settled
+            setTimeout(function() {
+              // Check if notification already exists to avoid duplicates
+              if (!document.getElementById('emergency-notification')) {
+                const div = document.createElement('div');
+                div.id = 'emergency-notification';
+                div.style.position = 'fixed';
+                div.style.top = '0';
+                div.style.left = '0';
+                div.style.right = '0';
+                div.style.backgroundColor = '#ef4444';
+                div.style.color = 'white';
+                div.style.padding = '10px';
+                div.style.textAlign = 'center';
+                div.style.zIndex = '9999';
+                div.style.transition = 'opacity 0.5s ease-in-out';
+                div.innerHTML = 'SoundLink has fixed a loading issue. If problems persist, please clear your browser cache.';
+                document.body.appendChild(div);
+                
+                // Fade out and remove after delay
+                setTimeout(function() {
+                  div.style.opacity = '0';
+                  setTimeout(() => {
+                    if (div.parentNode) {
+                      div.parentNode.removeChild(div);
+                    }
+                  }, 500);
+                }, 5000);
+              }
+            }, 1500);
+          });
+        }
+      })();
+    </script>
+    
+    <!-- Optimized Google Analytics -->
+    <script>
+      // Initialize Google Analytics with performance optimizations
+      (function() {
+        // Check if user has opted out of analytics
+        if (localStorage.getItem('analytics-opt-out') === 'true') return;
+        
+        // Load GA script with low priority
+        const gaScript = document.createElement('script');
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-W08CHTLBPV';
+        gaScript.async = true;
+        gaScript.defer = true;
+        gaScript.setAttribute('importance', 'low');
+        
+        // Initialize GA with performance optimizations
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        
+        // Set default parameters for better performance
+        gtag('js', new Date());
+        gtag('config', 'G-W08CHTLBPV', {
+          'send_page_view': false, // Disable automatic page views
+          'anonymize_ip': true, // Anonymize IP addresses
+          'allow_google_signals': false, // Disable Google signals
+          'allow_ad_personalization_signals': false, // Disable ad personalization
+          'transport_url': 'https://www.google-analytics.com', // Use HTTPS
+          'cookie_flags': 'SameSite=None;Secure', // Secure cookies
+          'cookie_domain': 'auto', // Automatic cookie domain
+          'cookie_expires': 28 * 24 * 60 * 60, // 28 days
+          'cookie_update': false, // Don't update cookies
+          'linker': {
+            'domains': ['soundlink.com'] // Specify domains for cross-domain tracking
+          }
+        });
+        
+        // Add script to document
+        document.head.appendChild(gaScript);
+        
+        // Track page views manually after load
+        window.addEventListener('load', function() {
+          // Use requestIdleCallback for non-critical tracking
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(function() {
+              gtag('event', 'page_view', {
+                'page_title': document.title,
+                'page_location': window.location.href,
+                'page_path': window.location.pathname
+              });
+            });
+          } else {
+            // Fallback for browsers that don't support requestIdleCallback
+            setTimeout(function() {
+              gtag('event', 'page_view', {
+                'page_title': document.title,
+                'page_location': window.location.href,
+                'page_path': window.location.pathname
+              });
+            }, 1000);
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

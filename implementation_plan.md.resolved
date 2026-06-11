@@ -1,0 +1,52 @@
+# Deploying Music-SoundLink to Vercel
+
+The goal is to prepare both the frontend and backend of the `Music-SoundLink` project for deployment on Vercel. 
+
+Since the project uses a monorepo structure with an Express backend and a Vite frontend, the best practice for deploying on Vercel is to create **two separate Vercel projects** linked to the same repository. This avoids complex routing rules and ensures both parts are built optimally using Vercel's native features.
+
+## User Review Required
+> [!IMPORTANT]  
+> Vercel hosts Express apps as **Serverless Functions**. This means background processes (like the `keepAlive` ping loop currently in `server.js`) and persistent memory (e.g. storing files directly on disk instead of Cloudinary/S3) will not work exactly the same as on a traditional server like Render or Heroku. However, standard REST API endpoints will work perfectly. I will adjust the `server.js` so it conditionally turns off `app.listen()` when deployed to Vercel to avoid timeouts.
+
+## Proposed Changes
+
+### Backend Component
+We need to configure the backend to be treated as a Vercel Serverless Function and avoid calling `app.listen()` during the serverless execution.
+
+#### [MODIFY] [server.js](file:///d:/Important%20Web-Development%20Projects/Music-SoundLink/backend/server.js)
+- Wrap the `app.listen()` and `keepAlive()` logic in an `if (process.env.NODE_ENV !== 'production')` block (or check for `process.env.VERCEL`).
+- Add `export default app;` at the end of the file so Vercel can ingest the Express instance.
+
+#### [NEW] [vercel.json](file:///d:/Important%20Web-Development%20Projects/Music-SoundLink/backend/vercel.json)
+- Create a Vercel configuration specifically for the backend to route all traffic to `server.js`.
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
+}
+```
+
+### Frontend Component
+The frontend is already optimally configured. It uses `import.meta.env.VITE_BACKEND_URL` to determine the API path, which is exactly what we need.
+
+- **No code changes are necessary** for the frontend, but I will provide you with the exact Vercel dashboard configuration steps during the verification phase.
+
+## Verification Plan
+
+### Automated Tests
+- N/A - Deployment configurations.
+
+### Manual Verification
+1. I will apply the code changes and verify the project still runs locally using `npm run dev`.
+2. I will provide you with a step-by-step walkthrough on how to import the repository twice in Vercel (once for the frontend, once for the backend) and set the correct root directories and environment variables (like `VITE_BACKEND_URL`).

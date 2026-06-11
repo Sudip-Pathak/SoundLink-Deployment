@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 128" width="512" height="128">
+  <!-- Dark background -->
+  <rect width="100%" height="100%" fill="#1A1A1A"/>
+
+  <!-- Sound wave bars -->
+  <rect x="30" y="44" width="14" height="40" rx="2" fill="#F8B500"/>
+  <rect x="55" y="24" width="14" height="80" rx="2" fill="#FF4E33"/>
+  <rect x="80" y="34" width="14" height="60" rx="2" fill="#FF2C77"/>
+  <rect x="105" y="14" width="14" height="100" rx="2" fill="#B02EE9"/>
+  <rect x="130" y="44" width="14" height="40" rx="2" fill="#7627EB"/>
+
+  <!-- Sound Link text -->
+  <text x="170" y="75" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#FFFFFF" text-anchor="start">Sound Link</text>
+</svg> 

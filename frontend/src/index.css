@@ -1,0 +1,658 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fuchsia: #a855f7;
+  --fuchsia-light: #c084fc;
+  --fuchsia-dark: #86198f;
+  --app-background: #000000;
+  --content-background: #050505;
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+  --safe-area-left: 0px;
+  --safe-area-right: 0px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100% !important;
+  position: relative !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important; /* Enhanced smooth scrolling for iOS */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  overscroll-behavior-y: none;
+  touch-action: pan-y;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--app-background);
+  color: #fff;
+  min-height: 100vh !important;
+  height: auto !important;
+  position: relative !important;
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important; /* Enhanced smooth scrolling for iOS */
+  padding-bottom: var(--player-bottom-padding, 0);
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Add class for extra small screens */
+@media (min-width: 320px) {
+  .xs\:block {
+    display: block;
+  }
+  
+  .xs\:hidden {
+    display: none;
+  }
+  
+  /* Ensure scrolling works on small screens */
+  html, body, #root {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: relative !important;
+    background-color: var(--app-background);
+  }
+}
+
+/* Footer spacing for premium player - reduced */
+footer {
+  margin-bottom: var(--player-bottom-padding, 0);
+}
+
+/* Global safe area insets - add at root level */
+:root {
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+  --safe-area-left: 0px;
+  --safe-area-right: 0px;
+}
+
+/* Apply safe area padding to the body */
+body {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Remove utility classes for safe area usage */
+.pt-safe {
+  padding-top: 0 !important;
+}
+
+.pt-safe-plus {
+  padding-top: 0 !important;
+}
+
+.pb-safe {
+  padding-bottom: 0 !important;
+}
+
+.pl-safe {
+  padding-left: 0 !important;
+}
+
+.pr-safe {
+  padding-right: 0 !important;
+}
+
+.mt-safe {
+  margin-top: 0 !important;
+}
+
+.mb-safe {
+  margin-bottom: 0 !important;
+}
+
+/* Remove combined safe area padding classes */
+.px-safe {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.py-safe {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.p-safe {
+  padding: 0 !important;
+}
+
+/* Ensure content containers have space - reduced */
+.content-container {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  position: relative;
+  background-color: var(--content-background);
+}
+
+/* Content fade at bottom that sits above the player */
+.content-fade {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0) 100%);
+  z-index: 39; /* One below the player z-index */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Status bar background for notched devices */
+.status-bar-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--safe-area-top);
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Styles for devices with notches */
+body.has-notch .app-header,
+body.has-notch .fixed-header {
+  padding-top: var(--safe-area-top);
+}
+
+body.has-notch .mobile-player-overlay {
+  padding-top: var(--safe-area-top);
+}
+
+body.has-notch .side-panel,
+body.has-notch .modal-content {
+  padding-top: var(--safe-area-top);
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: relative !important;
+    height: auto !important;
+  }
+  
+  footer {
+    margin-bottom: 15px;
+  }
+  
+  .content-container {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .content-fade {
+    bottom: 100px; /* Match mobile player position */
+    height: 100px; /* Larger fade area for mobile */
+  }
+
+  /* Playlists should appear above player */
+  .playlist-container, 
+  .queue-container,
+  .modal-container {
+    z-index: 50 !important;
+    position: relative !important;
+  }
+  
+  /* Ensure proper layering of mobile elements */
+  .bottom-nav-dropdown,
+  .mobile-dropdown-menu,
+  .more-button > div {
+    z-index: 100 !important;
+  }
+  
+  /* Increase tap target sizes */
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Reduce expensive animations when battery is low */
+  @media (prefers-reduced-motion) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+  
+  /* Make scrollbars thinner for touch */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+  
+  /* Adjust font sizes for better readability */
+  body {
+    font-size: 16px; /* Minimum recommended size for mobile */
+  }
+  
+  /* Improve contrast */
+  input, textarea, select {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+  }
+}
+
+/* Focus states for keyboard navigation and accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--fuchsia);
+  outline-offset: 2px;
+}
+
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Hide player on large screens when no track is playing */
+@media (min-width: 768px) {
+  .hide-on-large {
+    display: none !important;
+  }
+}
+
+/* Battery-aware animations */
+@media (prefers-reduced-motion) {
+  .battery-aware {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* CSS for native-like bottom sheet */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1f1f1f;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bottom-sheet-backdrop.open {
+  opacity: 1;
+}
+
+/* Drag indicator for bottom sheet */
+.bottom-sheet-drag {
+  width: 36px;
+  height: 4px;
+  background-color: #666;
+  border-radius: 2px;
+  margin: 10px auto;
+}
+
+/* Switch component styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #444;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--fuchsia);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* CSS for mobile app container */
+#root {
+  height: auto !important;
+  min-height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile-specific scrolling styles */
+@media (max-width: 576px) {
+  html, body, #root {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: relative !important;
+  }
+  
+  .content-container {
+    flex: 1;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+}
+
+/* PWA specific fixes - make PWA behave like website */
+@media all and (display-mode: standalone), all and (display-mode: fullscreen) {
+  html, body, #root {
+    position: relative !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100% !important;
+  }
+  
+  .content-container {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 150px !important;
+  }
+}
+
+/* Make sure fixed position elements don't block content */
+.fixed-bottom {
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+}
+
+/* DisplayHome specific fixes for scrolling */
+.display-home-container {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  position: relative !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+@media (max-width: 576px) {
+  /* Always enable scrolling on small screens */
+  body, html, #root {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: static !important;
+  }
+  
+  .min-h-screen {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .content-container {
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure margins don't cause overflow issues */
+  footer {
+    margin-bottom: calc(var(--player-bottom-padding, 0) + 1rem) !important; 
+  }
+}
+
+/* Hide scrollbars but maintain scrolling functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+  width: 0;
+  height: 0;
+}
+
+/* Remove underlines from all links */
+a, a:hover, a:focus, a:active, a:visited {
+  text-decoration: none !important;
+}
+
+/* Player hidden on mobile styles */
+.player-hidden-mobile .bottom-navigation {
+  background: linear-gradient(180deg, var(--theme-secondary)cc, var(--theme-secondary)dd) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Smooth transitions for player and navigation */
+.player-container,
+.bottom-navigation {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Ensure proper z-index layering */
+.player-container {
+  z-index: 40;
+}
+
+.bottom-navigation {
+  z-index: 50;
+}
+
+/* Adjust content padding when player is hidden on mobile */
+@media (max-width: 768px) {
+  .player-hidden-mobile .content-container {
+    padding-bottom: 50px !important;
+  }
+  
+  .player-hidden-mobile .content-fade {
+    bottom: 50px;
+  }
+}
+
+/* Fix for rubber band/elastic scrolling effect on iOS PWA */
+@supports (-webkit-touch-callout: none) {
+  @media all and (display-mode: standalone), all and (display-mode: fullscreen) {
+    body {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    #root {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .content-container {
+      padding-bottom: 150px !important;
+    }
+  }
+}
+
+/* YouTube Player Mobile Responsiveness */
+.youtube-premium-player {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Mobile-specific YouTube player adjustments */
+@media (max-width: 768px) {
+  .youtube-premium-player {
+    /* Ensure it's above the bottom navigation */
+    z-index: 60 !important;
+  }
+  
+  /* Make controls more touch-friendly on mobile */
+  .youtube-premium-player button {
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Ensure the player is visible and not hidden behind navigation */
+  .youtube-premium-player:not(.expanded) {
+    bottom: 50px !important;
+  }
+  
+  /* Full screen mode on mobile */
+  .youtube-premium-player.expanded {
+    z-index: 9999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+}
+
+/* Ensure YouTube iframe is responsive */
+.youtube-player-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.youtube-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Touch-friendly controls for mobile */
+@media (max-width: 768px) {
+  .youtube-premium-player .flex.items-center.space-x-2 button {
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .youtube-premium-player .flex.items-center.space-x-2 button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+

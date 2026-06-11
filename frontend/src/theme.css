@@ -1,0 +1,235 @@
+/* SoundLink custom theme overrides */
+:root {
+  /* Default theme colors */
+  --soundlink-primary: #a855f7;    /* Purple */
+  --soundlink-primary-dark: #9333ea;
+  --soundlink-primary-hover: #c084fc;
+  --soundlink-background: #121212;  /* Dark background */
+  --soundlink-surface: #1e1e1e;    /* Slightly lighter surface */
+  --soundlink-surface-hover: #2a2a2a;
+  --soundlink-text: #ffffff;
+  --soundlink-text-secondary: #a0a0a0;
+  --soundlink-highlight: #c084fc;  /* Lighter purple for highlights */
+  --soundlink-secondary: #121212;
+  --soundlink-accent: #ec4899;
+  
+  /* Dynamic theme colors (set by PlayerContext) */
+  --theme-primary: var(--soundlink-primary);
+  --theme-secondary: var(--soundlink-secondary);
+  --theme-text: var(--soundlink-text);
+  --theme-accent: var(--soundlink-accent);
+}
+
+/* Apply the theme to buttons */
+.btn-primary,
+.button-primary,
+button[type="submit"]:not(.custom-button),
+.primary-button {
+  background-color: var(--theme-primary) !important;
+  color: white !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover,
+.button-primary:hover,
+button[type="submit"]:not(.custom-button):hover,
+.primary-button:hover {
+  background-color: var(--theme-primary-hover) !important;
+}
+
+/* Apply theme to text */
+.text-primary,
+.primary-text {
+  color: var(--theme-primary) !important;
+}
+
+/* Apply theme to borders */
+.border-primary,
+.primary-border,
+input:focus:not(.custom-input) {
+  border-color: var(--theme-primary) !important;
+}
+
+/* Apply theme to form controls */
+.form-control:focus,
+input[type="text"]:focus:not(.custom-input),
+input[type="email"]:focus:not(.custom-input),
+input[type="password"]:focus:not(.custom-input) {
+  border-color: var(--theme-primary) !important;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2) !important;
+}
+
+/* Custom spinner */
+.custom-spinner {
+  border-color: var(--theme-primary) !important;
+  border-top-color: transparent !important;
+}
+
+/* Custom backgrounds */
+.bg-primary-light {
+  background-color: rgba(168, 85, 247, 0.2) !important;
+}
+
+/* Link colors */
+a:not(.custom-link) {
+  color: var(--theme-primary) !important;
+}
+
+/* Hover states */
+.hover-primary:hover {
+  color: #c084fc !important;
+}
+
+/* Custom player theming */
+.player-container .progress-bar {
+  background-color: var(--theme-accent) !important;
+}
+
+.player-container .play-button {
+  background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent)) !important;
+}
+
+.player-container .active-control {
+  color: var(--theme-accent) !important;
+}
+
+/* Adjustments for mobile */
+@media (max-width: 768px) {
+  .mobile-player-overlay {
+    background: linear-gradient(135deg, var(--theme-primary)88, var(--theme-secondary)ee) !important;
+  }
+}
+
+/* Custom scrollbar with theme color */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #222;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-accent);
+}
+
+/* Update progress bars */
+progress::-webkit-progress-value,
+.progress-bar,
+.range-slider::-webkit-slider-thumb {
+  background-color: var(--soundlink-primary) !important;
+}
+
+/* Update loading spinners */
+.animate-spin {
+  border-color: var(--soundlink-primary) !important;
+  border-top-color: transparent !important;
+}
+
+/* Update sidebar items */
+.bg-cyan-900 {
+  background-color: rgba(168, 85, 247, 0.2) !important;
+}
+
+/* Update sidebar highlights */
+.text-cyan-400 {
+  color: var(--soundlink-primary) !important;
+}
+
+/* Keep the fuchsia-400 class used in various places */
+.text-fuchsia-400 {
+  color: #c084fc !important;
+}
+
+/* Keep the purple gradient for buttons */
+.from-fuchsia-500, .to-purple-600 {
+  /* Keep original values */
+}
+
+.hover\:from-fuchsia-600:hover, .hover\:to-purple-700:hover {
+  /* Keep original values */
+}
+
+/* Accessibility improvements for color contrast */
+
+/* Improve text contrast on dark backgrounds */
+.text-neutral-400 {
+  color: #b4b4b4 !important; /* Increased from typical #9ca3af for better contrast */
+}
+
+.text-neutral-500 {
+  color: #a3a3a3 !important; /* Increased from typical #6b7280 for better contrast */
+}
+
+/* Ensure link text has sufficient contrast */
+a {
+  text-decoration: underline; /* Makes links more distinguishable without relying on color alone */
+}
+
+a:focus {
+  outline: 2px solid #d946ef; /* Focus indicator for keyboard navigation */
+  outline-offset: 2px;
+}
+
+/* Focus styles for interactive elements */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #d946ef;
+  outline-offset: 2px;
+}
+
+/* Skip to content link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #d946ef;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Improved color contrast for input placeholders */
+::placeholder {
+  color: #a3a3a3 !important; /* Increased for better contrast */
+  opacity: 1;
+}
+
+/* High contrast mode adjustments */
+@media (forced-colors: active) {
+  /* Ensure elements remain visible in high contrast mode */
+  button, 
+  .button,
+  a {
+    forced-color-adjust: none;
+  }
+}
+
+/* Improved contrast for error messages */
+.text-red-500 {
+  color: #f05252 !important; /* Brighter red for better visibility on dark backgrounds */
+}
+
+/* Improved contrast for success messages */
+.text-green-500 {
+  color: #10b981 !important; /* Brighter green for better visibility on dark backgrounds */
+}
+
+/* Improved button state contrast */
+button:disabled,
+.button:disabled {
+  opacity: 0.6 !important; /* Increased from typical 0.5 for better visibility */
+} 
