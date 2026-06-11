@@ -34,7 +34,7 @@ const sendOTPEmail = async (email, otp, username) => {
   const transporter = nodemailer.createTransport(transporterConfig);
 
   await transporter.sendMail({
-    from: process.env.SMTP_FROM,
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: email,
     subject: "🎵 SoundLink - Verify Your Email",
     html: `
@@ -494,7 +494,7 @@ export const forgotPassword = async (req, res) => {
     try {
       console.log("Attempting to send email to:", user.email);
       const info = await transporter.sendMail({
-        from: process.env.SMTP_FROM,
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
         to: user.email,
         subject: "🎵 SoundLink - Reset Your Password",
         html: `
