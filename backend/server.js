@@ -58,7 +58,10 @@ app.use(
         "https://soundlink.live",
         "http://www.soundlink.live",
         "https://www.soundlink.live",
-        "https://sound-link-deployment-frontend.vercel.app"
+        "https://sound-link-deployment-frontend.vercel.app",
+        // New domain
+        "https://sudip-pathak.com.np",
+        "https://www.sudip-pathak.com.np"
       ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
