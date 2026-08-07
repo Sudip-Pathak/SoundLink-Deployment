@@ -475,14 +475,14 @@ const Navbar = (props) => {
                                     className="hidden sm:flex items-center gap-2 px-4 py-2 bg-neutral-800 text-white font-medium rounded-full hover:bg-neutral-700 border border-neutral-700 transition-all"
                                 >
                                     <FaUserShield className="text-sm text-fuchsia-400" />
-                                    <span>Admin Login</span>
+                                    <span>Artist Login</span>
                                 </button>
                                 <button 
                                     onClick={() => navigate('/auth')}
                                     className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white font-medium rounded-full hover:shadow-lg hover:from-fuchsia-600 hover:to-purple-700 transition-all"
                                 >
                                     <FaUser className="text-sm" />
-                                    <span>Sign In</span>
+                                    <span>User Login</span>
                                 </button>
                             </div>
                         )}

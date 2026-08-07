@@ -166,7 +166,7 @@ const AuthPage = () => {
                   onClick={() => setMode("login")}
                   className={`${theme.linkText} ${theme.linkHover} transition`}
                 >
-                  Already have an account? <span className="font-bold">Sign in</span>
+                  Already have an account? <span className="font-bold">Log in</span>
                 </button>
               )}
             </div>

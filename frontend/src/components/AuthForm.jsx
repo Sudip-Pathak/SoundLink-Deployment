@@ -130,7 +130,7 @@ const AuthForm = ({ mode = "login", returnTo }) => {
       
       <div className="card bg-base-100 shadow-2xl p-8 w-full max-w-md mx-auto">
         <h2 className="text-3xl font-bold text-white text-center mb-8">
-          {currentMode === "login" ? (isAdminRegistration ? "Admin Log in to SoundLink" : "Log in to SoundLink") : "Sign up for free"}
+          {currentMode === "login" ? (isAdminRegistration ? "Artist Log in to SoundLink" : "User Log in to SoundLink") : "Sign up for free"}
         </h2>
         
         {/* Avatar selection (register only) */}

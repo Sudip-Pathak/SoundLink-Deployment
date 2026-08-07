@@ -6,7 +6,8 @@ const connectDB = async () => {
   });
 
   await mongoose.connect(process.env.MONGODB_URI, {
-    dbName: "SoundLive"
+    dbName: "SoundLive",
+    family: 4 // Force IPv4 to prevent querySrv ECONNREFUSED on Windows
   });
 };
 
