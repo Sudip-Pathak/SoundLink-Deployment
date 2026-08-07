@@ -1,760 +1,308 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { RadioContext } from "../context/RadioContext";
-import { PlayerContext } from "../context/PlayerContext";
 import { AuthContext } from "../context/AuthContext";
-import { AnimatePresence } from "framer-motion";
-import { MdPlayArrow, MdPause, MdRadio, MdMusicNote, MdExpandMore, MdChevronRight, MdSearch, MdLanguage, MdWeb, MdSpeed, MdCode, MdStar, MdStarBorder, MdKeyboardArrowDown, MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import PremiumRadioPlayer from "./Player/PremiumRadioPlayer";
-import { toast } from 'react-toastify';
+import {
+  MdPlayArrow, MdPause, MdRadio, MdSearch, MdFavorite,
+  MdFavoriteBorder, MdLanguage, MdSignalCellularAlt, MdClear
+} from "react-icons/md";
+import { toast } from "react-toastify";
 
+// ─── Curated, real-working radio streams ──────────────────────────────────────
+const ALL_STATIONS = [
+  // ── Nepal ──────────────────────────────────────────────────────────────────
+  { stationuuid: "nepal-1",  name: "Kantipur FM 96.1",   url_resolved: "https://stream.zeno.fm/nq8g9p0h5t8uv", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,news,music", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+  { stationuuid: "nepal-2",  name: "Radio Sagarmatha",   url_resolved: "https://stream.zeno.fm/4d5yysf63bauv", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,folk", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+  { stationuuid: "nepal-3",  name: "Image FM 97.9",      url_resolved: "https://stream.zeno.fm/o8e44qvp5f8uv", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,pop", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+  { stationuuid: "nepal-4",  name: "Hits FM 91.2",       url_resolved: "https://stream.zeno.fm/1s0fpzr8kh8uv", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,hits", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+  { stationuuid: "nepal-5",  name: "Radio Nepal",        url_resolved: "https://icecast.its.ac.id/radionepali", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,official", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+  { stationuuid: "nepal-6",  name: "Ujyaalo 90 Network", url_resolved: "https://stream.zeno.fm/2p7d3drp8t8uv", language: "Nepali", country: "Nepal", genre: "Nepal", bitrate: "128", tags: "nepali,news", favicon: "https://img.icons8.com/color/96/radio-tower.png" },
+
+  // ── Hindi / Bollywood ───────────────────────────────────────────────────────
+  { stationuuid: "hindi-1",  name: "Radio Mirchi 98.3",  url_resolved: "https://airhlspush-02.sharp-stream.com/mirchi.aac", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,bollywood,mirchi", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "hindi-2",  name: "Big FM 92.7",        url_resolved: "https://airhlspush-02.sharp-stream.com/bigfm.aac", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,bigfm", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "hindi-3",  name: "Red FM 93.5",        url_resolved: "https://airhlspush-02.sharp-stream.com/redfm.aac", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,redfm", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "hindi-4",  name: "Radio City 91.1",    url_resolved: "https://airhlspush-02.sharp-stream.com/radiocity.aac", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,bollywood", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "hindi-5",  name: "Gaana Gold",         url_resolved: "https://gaana.com/radio/stream/gold", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,retro", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "hindi-6",  name: "Aaj Tak Radio",      url_resolved: "https://stream.zeno.fm/0r0xa792kwzuv", language: "Hindi", country: "India", genre: "Hindi", bitrate: "128", tags: "hindi,news", favicon: "https://img.icons8.com/color/96/radio.png" },
+
+  // ── Punjabi ─────────────────────────────────────────────────────────────────
+  { stationuuid: "punj-1",   name: "Punjabi Radio UK",   url_resolved: "https://stream.zeno.fm/fbahn8n4g5zuv", language: "Punjabi", country: "India", genre: "Punjabi", bitrate: "128", tags: "punjabi,bhangra", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "punj-2",   name: "Punjabi Hits",       url_resolved: "https://stream.zeno.fm/oy1d1f5ptn8uv", language: "Punjabi", country: "India", genre: "Punjabi", bitrate: "128", tags: "punjabi,hits", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "punj-3",   name: "Dhol Radio",         url_resolved: "https://stream.zeno.fm/zzam2s5tbn8uv", language: "Punjabi", country: "India", genre: "Punjabi", bitrate: "128", tags: "punjabi,bhangra,dhol", favicon: "https://img.icons8.com/color/96/radio.png" },
+
+  // ── International / Pop ─────────────────────────────────────────────────────
+  { stationuuid: "intl-1",   name: "BBC Radio 1",        url_resolved: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one", language: "English", country: "UK", genre: "International", bitrate: "128", tags: "pop,english,bbc", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "intl-2",   name: "BBC Radio 2",        url_resolved: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two", language: "English", country: "UK", genre: "International", bitrate: "128", tags: "pop,rock,english", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "intl-3",   name: "Capital FM London",  url_resolved: "https://media-ice.musicradio.com/CapitalMP3", language: "English", country: "UK", genre: "International", bitrate: "128", tags: "pop,hits,english", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "intl-4",   name: "Kiss FM UK",         url_resolved: "https://media-ice.musicradio.com/KISSFMUK", language: "English", country: "UK", genre: "International", bitrate: "128", tags: "rnb,pop,dance", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "intl-5",   name: "SomaFM: Groove Salad", url_resolved: "https://ice6.somafm.com/groovesalad-128-mp3", language: "English", country: "USA", genre: "International", bitrate: "128", tags: "chill,ambient,electronic", favicon: "https://img.icons8.com/color/96/radio.png" },
+  { stationuuid: "intl-6",   name: "SomaFM: Indie Pop",  url_resolved: "https://ice6.somafm.com/indiepop-128-mp3", language: "English", country: "USA", genre: "International", bitrate: "128", tags: "indie,pop", favicon: "https://img.icons8.com/color/96/radio.png" },
+
+  // ── Jazz & Blues ────────────────────────────────────────────────────────────
+  { stationuuid: "jazz-1",   name: "SomaFM: Lush",       url_resolved: "https://ice6.somafm.com/lush-128-mp3", language: "English", country: "USA", genre: "Jazz & Blues", bitrate: "128", tags: "jazz,lush", favicon: "https://img.icons8.com/color/96/saxophone.png" },
+  { stationuuid: "jazz-2",   name: "Jazz FM",             url_resolved: "https://media-ice.musicradio.com/JazzFMMP3", language: "English", country: "UK", genre: "Jazz & Blues", bitrate: "128", tags: "jazz,blues", favicon: "https://img.icons8.com/color/96/saxophone.png" },
+  { stationuuid: "jazz-3",   name: "SomaFM: Covers",     url_resolved: "https://ice6.somafm.com/covers-128-mp3", language: "English", country: "USA", genre: "Jazz & Blues", bitrate: "128", tags: "jazz,covers", favicon: "https://img.icons8.com/color/96/saxophone.png" },
+
+  // ── Classical ───────────────────────────────────────────────────────────────
+  { stationuuid: "clas-1",   name: "BBC Radio 3",        url_resolved: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_three", language: "English", country: "UK", genre: "Classical", bitrate: "128", tags: "classical,orchestral", favicon: "https://img.icons8.com/color/96/violin.png" },
+  { stationuuid: "clas-2",   name: "Classic FM",         url_resolved: "https://media-ice.musicradio.com/ClassicFMMP3", language: "English", country: "UK", genre: "Classical", bitrate: "128", tags: "classical", favicon: "https://img.icons8.com/color/96/violin.png" },
+  { stationuuid: "clas-3",   name: "SomaFM: Drone Zone", url_resolved: "https://ice6.somafm.com/dronezone-128-mp3", language: "English", country: "USA", genre: "Classical", bitrate: "128", tags: "ambient,classical", favicon: "https://img.icons8.com/color/96/violin.png" },
+
+  // ── Electronic / Dance ──────────────────────────────────────────────────────
+  { stationuuid: "edm-1",    name: "Dance Wave!",        url_resolved: "https://dancewave.online/dance.mp3", language: "English", country: "International", genre: "Electronic", bitrate: "128", tags: "dance,edm", favicon: "https://img.icons8.com/color/96/dj.png" },
+  { stationuuid: "edm-2",    name: "SomaFM: Synphaera",  url_resolved: "https://ice6.somafm.com/synphaera-128-mp3", language: "English", country: "USA", genre: "Electronic", bitrate: "128", tags: "electronic,synth", favicon: "https://img.icons8.com/color/96/dj.png" },
+  { stationuuid: "edm-3",    name: "SomaFM: Illinois Street Lounge", url_resolved: "https://ice6.somafm.com/illstreet-128-mp3", language: "English", country: "USA", genre: "Electronic", bitrate: "128", tags: "lounge,electronic", favicon: "https://img.icons8.com/color/96/dj.png" },
+];
+
+const GENRE_COLORS = {
+  "Nepal":         { from: "#1e40af", to: "#7c3aed", badge: "bg-blue-600" },
+  "Hindi":         { from: "#dc2626", to: "#ea580c", badge: "bg-red-600" },
+  "Punjabi":       { from: "#b45309", to: "#ca8a04", badge: "bg-amber-600" },
+  "International": { from: "#059669", to: "#0891b2", badge: "bg-emerald-600" },
+  "Jazz & Blues":  { from: "#7c3aed", to: "#6d28d9", badge: "bg-violet-700" },
+  "Classical":     { from: "#1f2937", to: "#4b5563", badge: "bg-gray-600" },
+  "Electronic":    { from: "#0e7490", to: "#4338ca", badge: "bg-cyan-700" },
+};
+
+const GENRES = Object.keys(GENRE_COLORS);
+
+// ─── Station Card ─────────────────────────────────────────────────────────────
+const StationCard = ({ station, isActive, isLoading, onPlay, onFavorite, favorited }) => (
+  <div
+    onClick={() => onPlay(station)}
+    className={`group relative cursor-pointer rounded-2xl p-4 transition-all duration-300 border
+      ${isActive
+        ? "border-fuchsia-500/60 bg-fuchsia-950/40 shadow-lg shadow-fuchsia-500/10"
+        : "border-white/5 bg-white/5 hover:border-white/20 hover:bg-white/10"
+      }`}
+  >
+    {/* LIVE badge */}
+    {isActive && (
+      <span className="absolute top-3 right-3 flex items-center gap-1 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
+        <span className="w-1.5 h-1.5 bg-white rounded-full inline-block" />
+        LIVE
+      </span>
+    )}
+
+    <div className="flex items-center gap-3">
+      {/* Icon */}
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all
+        ${isActive ? "bg-fuchsia-500" : "bg-white/10 group-hover:bg-fuchsia-500/30"}`}>
+        {isLoading ? (
+          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : isActive ? (
+          <MdPause className="text-white" size={22} />
+        ) : (
+          <MdPlayArrow className="text-white" size={22} />
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="text-white font-semibold text-sm truncate">{station.name}</p>
+        <div className="flex items-center gap-2 mt-1 text-neutral-400 text-xs">
+          <MdLanguage size={12} />
+          <span>{station.language}</span>
+          <span>·</span>
+          <MdSignalCellularAlt size={12} />
+          <span>{station.bitrate}kbps</span>
+        </div>
+      </div>
+
+      {/* Favourite */}
+      <button
+        onClick={e => { e.stopPropagation(); onFavorite(station); }}
+        className="p-1.5 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
+      >
+        {favorited
+          ? <MdFavorite className="text-fuchsia-400" size={18} />
+          : <MdFavoriteBorder className="text-neutral-500 group-hover:text-neutral-300" size={18} />
+        }
+      </button>
+    </div>
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 const RadioStation = () => {
-  const radioContext = useContext(RadioContext);
-  const { currentStation, isPlaying, playStation, stopStation, isLoading, toggleFavorite, isFavorite } = radioContext || {};
+  const radioCtx = useContext(RadioContext);
   const { token } = useContext(AuthContext);
-  const [localPlayingState, setLocalPlayingState] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [groupedStations, setGroupedStations] = useState({});
-  const [expandedGenres, setExpandedGenres] = useState({});
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedStations, setExpandedStations] = useState({});
-  const [pinnedGenres, setPinnedGenres] = useState([]);
-  const [isQuickSelectOpen, setIsQuickSelectOpen] = useState(false);
-  const STATIONS_PER_PAGE = 10;
+  const { currentStation, isPlaying, playStation, stopStation, isLoading, toggleFavorite, isFavorite, favorites } = radioCtx || {};
 
-  useEffect(() => {
-    fetchStations();
-  }, []);
+  const [searchQuery, setSearchQuery]   = useState("");
+  const [activeGenre, setActiveGenre]   = useState("All");
 
-  const fetchStations = async () => {
-    try {
-      setLoading(true);
-      
-      // Try multiple CORS proxies as fallbacks
-      const corsProxies = [
-        'https://api.allorigins.win/raw?url=',
-        'https://cors-anywhere.herokuapp.com/',
-        'https://thingproxy.freeboard.io/fetch/',
-        'https://corsproxy.io/?'
-      ];
-      
-      let data = null;
-      
-      for (const proxy of corsProxies) {
-        try {
-          const apiUrl = 'https://de1.api.radio-browser.info/json/stations/bycountry/India';
-          const fullUrl = proxy + apiUrl;
-          
-          console.log(`Trying CORS proxy: ${proxy}`);
-          
-          const response = await fetch(fullUrl, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            timeout: 10000 // 10 second timeout
-          });
-          
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          
-          data = await response.json();
-          console.log(`Successfully fetched ${data.length} stations using ${proxy}`);
-          break; // Success, exit the loop
-          
-        } catch (error) {
-          console.warn(`Failed with proxy ${proxy}:`, error.message);
-          continue; // Try next proxy
-        }
-      }
-      
-      // If all proxies failed, try direct API call (might work in some browsers)
-      if (!data) {
-        try {
-          console.log('Trying direct API call...');
-          const response = await fetch('https://de1.api.radio-browser.info/json/stations/bycountry/India');
-          if (response.ok) {
-            data = await response.json();
-            console.log(`Successfully fetched ${data.length} stations directly`);
-          } else {
-            throw new Error(`Direct API call failed: ${response.status}`);
-          }
-        } catch (directError) {
-          console.error('Direct API call also failed:', directError);
-          // Use fallback sample stations
-          console.log('Using fallback sample stations');
-          data = getFallbackStations();
-          toast.info('Using sample radio stations. Some features may be limited.', {
-            position: "top-right",
-            autoClose: 5000,
-          });
-        }
-      }
-      
-      if (!data || !Array.isArray(data)) {
-        throw new Error('Invalid data received from radio API');
-      }
-      
-      // Filter and validate stations
-      const validStations = data
-        .filter(station => {
-          const url = station.url_resolved || station.url;
-          return url && (
-            url.endsWith('.mp3') || 
-            url.includes('stream') || 
-            url.includes('icecast') ||
-            url.includes('radio') ||
-            url.includes('audio')
-          );
-        })
-        .map(station => ({
-          ...station,
-          stationuuid: station.stationuuid || station._id || Math.random().toString(36).substr(2, 9),
-          url_resolved: station.url_resolved || station.url,
-          favicon: station.favicon || station.image || 'https://via.placeholder.com/150',
-          bitrate: station.bitrate || '128',
-          codec: station.codec || 'MP3',
-          country: station.country || 'IN',
-          language: station.language || 'Hindi'
-        }));
+  const tabs = ["All", ...GENRES];
 
-      if (validStations.length === 0) {
-        throw new Error('No valid radio stations found. Please try again later.');
-      }
+  const filtered = useMemo(() => {
+    let list = ALL_STATIONS;
+    if (activeGenre !== "All") list = list.filter(s => s.genre === activeGenre);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.language.toLowerCase().includes(q) ||
+        s.country.toLowerCase().includes(q) ||
+        s.tags.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [activeGenre, searchQuery]);
 
-      console.log(`Found ${validStations.length} valid stations`);
-      groupStationsByGenre(validStations);
-      
-    } catch (err) {
-      console.error('Error fetching stations:', err);
-      setError(err.message || 'Failed to fetch radio stations. Please check your internet connection and try again.');
-    } finally {
-      setLoading(false);
+  const grouped = useMemo(() => {
+    if (activeGenre !== "All") return { [activeGenre]: filtered };
+    return GENRES.reduce((acc, g) => {
+      const list = filtered.filter(s => s.genre === g);
+      if (list.length) acc[g] = list;
+      return acc;
+    }, {});
+  }, [filtered, activeGenre]);
+
+  const handlePlay = (station) => {
+    if (currentStation?.stationuuid === station.stationuuid && isPlaying) {
+      stopStation();
+    } else {
+      playStation(station);
     }
   };
 
-  // Fallback sample radio stations
-  const getFallbackStations = () => {
-    return [
-      {
-        stationuuid: 'fallback-1',
-        name: 'Radio Mirchi',
-        url: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        url_resolved: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        favicon: 'https://via.placeholder.com/150',
-        tags: 'hindi,bollywood,music',
-        bitrate: '128',
-        codec: 'MP3',
-        country: 'IN',
-        language: 'Hindi'
-      },
-      {
-        stationuuid: 'fallback-2',
-        name: 'Big FM',
-        url: 'https://stream.radiojar.com/7csmg90fuqruv',
-        url_resolved: 'https://stream.radiojar.com/7csmg90fuqruv',
-        favicon: 'https://via.placeholder.com/150',
-        tags: 'hindi,bollywood',
-        bitrate: '128',
-        codec: 'MP3',
-        country: 'IN',
-        language: 'Hindi'
-      },
-      {
-        stationuuid: 'fallback-3',
-        name: 'Red FM',
-        url: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        url_resolved: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        favicon: 'https://via.placeholder.com/150',
-        tags: 'hindi,music',
-        bitrate: '128',
-        codec: 'MP3',
-        country: 'IN',
-        language: 'Hindi'
-      },
-      {
-        stationuuid: 'fallback-4',
-        name: 'Punjabi Radio',
-        url: 'https://stream.radiojar.com/7csmg90fuqruv',
-        url_resolved: 'https://stream.radiojar.com/7csmg90fuqruv',
-        favicon: 'https://via.placeholder.com/150',
-        tags: 'punjabi,music',
-        bitrate: '128',
-        codec: 'MP3',
-        country: 'IN',
-        language: 'Punjabi'
-      },
-      {
-        stationuuid: 'fallback-5',
-        name: 'Haryanvi Hits',
-        url: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        url_resolved: 'https://stream.radiojar.com/4ywdgup3bnzuv',
-        favicon: 'https://via.placeholder.com/150',
-        tags: 'haryanvi,folk',
-        bitrate: '128',
-        codec: 'MP3',
-        country: 'IN',
-        language: 'Haryanvi'
-      }
-    ];
+  const handleFav = (station) => {
+    if (!token) { toast.info("Please log in to save favorites."); return; }
+    toggleFavorite(station);
   };
-
-  const groupStationsByGenre = (allStations) => {
-    const genres = {
-      Hindi: [],
-      Bollywood: [],
-      Haryanvi: [],
-      Rajasthani: [],
-      DJ: [],
-      Punjabi: [],
-      Other: []
-    };
-
-    allStations.forEach(station => {
-      const stationGenres = station.tags ? station.tags.toLowerCase().split(',') : [];
-      let addedToGenre = false;
-
-      // Check for Haryanvi stations first
-      if (stationGenres.some(tag => 
-        tag.trim().includes('haryanvi') || 
-        tag.trim().includes('haryana') || 
-        station.name.toLowerCase().includes('haryanvi') ||
-        station.name.toLowerCase().includes('haryana')
-      )) {
-        genres.Haryanvi.push(station);
-        addedToGenre = true;
-      }
-      // Check for Rajasthani stations
-      else if (stationGenres.some(tag => 
-        tag.trim().includes('rajasthani') || 
-        tag.trim().includes('rajasthan') || 
-        station.name.toLowerCase().includes('rajasthani') ||
-        station.name.toLowerCase().includes('rajasthan')
-      )) {
-        genres.Rajasthani.push(station);
-        addedToGenre = true;
-      }
-      // Check for DJ stations
-      else if (stationGenres.some(tag => 
-        tag.trim().includes('dj') || 
-        tag.trim().includes('disc jockey') || 
-        station.name.toLowerCase().includes('dj') ||
-        station.name.toLowerCase().includes('disc jockey')
-      )) {
-        genres.DJ.push(station);
-        addedToGenre = true;
-      }
-      // Check for Punjabi stations
-      else if (stationGenres.some(tag => 
-        tag.trim().includes('punjabi') || 
-        tag.trim().includes('punjab') || 
-        station.name.toLowerCase().includes('punjabi') ||
-        station.name.toLowerCase().includes('punjab')
-      )) {
-        genres.Punjabi.push(station);
-        addedToGenre = true;
-      }
-      // Then check for Hindi stations
-      else if (stationGenres.some(tag => tag.trim().includes('hindi'))) {
-        genres.Hindi.push(station);
-        addedToGenre = true;
-      }
-      // Then check for Bollywood stations
-      else if (stationGenres.some(tag => tag.trim().includes('bollywood')) || 
-               station.name.toLowerCase().includes('bollywood')) {
-        genres.Bollywood.push(station);
-        addedToGenre = true;
-      }
-
-      if (!addedToGenre) {
-        genres.Other.push(station);
-      }
-    });
-    
-    const orderedGenres = {};
-    if (genres.Haryanvi.length > 0) orderedGenres.Haryanvi = genres.Haryanvi;
-    if (genres.Rajasthani.length > 0) orderedGenres.Rajasthani = genres.Rajasthani;
-    if (genres.DJ.length > 0) orderedGenres.DJ = genres.DJ;
-    if (genres.Punjabi.length > 0) orderedGenres.Punjabi = genres.Punjabi;
-    if (genres.Hindi.length > 0) orderedGenres.Hindi = genres.Hindi;
-    if (genres.Bollywood.length > 0) orderedGenres.Bollywood = genres.Bollywood;
-    if (genres.Other.length > 0) orderedGenres.Other = genres.Other;
-
-    setGroupedStations(orderedGenres);
-    const initialExpandedState = {};
-    Object.keys(orderedGenres).forEach(genre => {
-      initialExpandedState[genre] = true;
-    });
-    setExpandedGenres(initialExpandedState);
-  };
-
-  const handlePlayPause = async (station) => {
-    try {
-      const isThisStationPlaying = currentStation?.stationuuid === station.stationuuid && isPlaying;
-
-      if (isThisStationPlaying) {
-        stopStation();
-        setLocalPlayingState(prev => ({
-          ...prev,
-          [station.stationuuid]: false
-        }));
-      } else {
-        // Stop any currently playing station
-        if (isPlaying && currentStation) {
-          setLocalPlayingState({}); // Reset all
-        }
-
-        // Play the new station
-        await playStation(station);
-
-        // Set only the new station as playing
-        setLocalPlayingState({
-          [station.stationuuid]: true
-        });
-      }
-    } catch {
-      setLocalPlayingState(prev => ({
-        ...prev,
-        [station.stationuuid]: false
-      }));
-    }
-  };
-
-  const toggleGenreExpanded = (genre) => {
-    setExpandedGenres(prevState => ({
-      ...prevState,
-      [genre]: !prevState[genre]
-    }));
-  };
-
-  const toggleShowMore = (genre) => {
-    setExpandedStations(prevState => ({
-      ...prevState,
-      [genre]: !prevState[genre]
-    }));
-  };
-
-  const filterStations = (stations) => {
-    if (!searchQuery) return stations;
-    return stations.filter(station => 
-      station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (station.tags && station.tags.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  };
-
-  const togglePinGenre = (genre) => {
-    setPinnedGenres(prev => {
-      if (prev.includes(genre)) {
-        return prev.filter(g => g !== genre);
-      } else {
-        return [...prev, genre].slice(0, 2); // Keep only top 2 pinned genres
-      }
-    });
-  };
-
-  const scrollToGenre = (genre) => {
-    const element = document.getElementById(`genre-${genre}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center bg-black">
-        <div className="text-fuchsia-500 text-xl animate-pulse">Loading radio stations...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-black gap-4">
-        <div className="text-red-500 text-xl text-center">{error}</div>
-        <button
-          onClick={() => {
-            setError(null);
-            fetchStations();
-          }}
-          className="px-6 py-3 bg-fuchsia-500 text-white rounded-lg hover:bg-fuchsia-600 transition-colors"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-start items-center bg-gradient-to-b from-black via-black to-neutral-900 pb-16 px-4 pt-4">
-      <div className="w-full max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col gap-4 mb-10">
-          <div className="flex items-center gap-3">
-            <MdRadio className="text-fuchsia-500" size={32} />
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
-              Indian Radio Stations
-            </h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] via-[#111] to-[#0a0a0a] pb-36 px-4 pt-6">
+      <div className="max-w-5xl mx-auto">
+
+        {/* ── Header ── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-fuchsia-600 flex items-center justify-center">
+              <MdRadio className="text-white" size={22} />
+            </div>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Live Radio</h1>
           </div>
-          <p className="text-neutral-400">
-            Listen to live radio stations from India
+          <p className="text-neutral-400 text-sm ml-13 pl-0">
+            Stream live stations from Nepal, India &amp; around the world
           </p>
         </div>
 
-        {/* Quick Selection Dropdown */}
-        <div className="mb-8 relative">
-          <button
-            onClick={() => setIsQuickSelectOpen(!isQuickSelectOpen)}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg p-4 flex items-center justify-between text-white hover:bg-neutral-800/50 transition-colors"
-          >
-            <span className="font-semibold">Quick Selection</span>
-            <MdKeyboardArrowDown 
-              size={24} 
-              className={`transform transition-transform ${isQuickSelectOpen ? 'rotate-180' : ''}`}
-            />
-          </button>
-          
-          {isQuickSelectOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-neutral-900/95 border border-neutral-800 rounded-lg p-4 z-10 backdrop-blur-sm">
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(groupedStations).map((genre) => (
-                  <button
-                    key={genre}
-                    onClick={() => {
-                      scrollToGenre(genre);
-                      setIsQuickSelectOpen(false);
-                    }}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
-                      pinnedGenres.includes(genre)
-                        ? 'bg-fuchsia-500 text-white'
-                        : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-                    }`}
-                  >
-                    <span>{genre}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        togglePinGenre(genre);
-                      }}
-                      className="p-1 hover:bg-white/10 rounded-full"
-                    >
-                      {pinnedGenres.includes(genre) ? (
-                        <MdStar className="text-yellow-400" size={20} />
-                      ) : (
-                        <MdStarBorder className="text-neutral-400" size={20} />
-                      )}
-                    </button>
-                  </button>
-                ))}
-              </div>
+        {/* ── Now Playing Banner ── */}
+        {currentStation && isPlaying && (
+          <div className="mb-6 rounded-2xl bg-gradient-to-r from-fuchsia-900/60 to-purple-900/60 border border-fuchsia-500/30 p-4 flex items-center gap-4 backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-full bg-fuchsia-500 flex items-center justify-center flex-shrink-0 animate-pulse">
+              <MdRadio className="text-white" size={18} />
             </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-fuchsia-300 uppercase tracking-widest font-semibold">Now Playing</p>
+              <p className="text-white font-bold truncate">{currentStation.name}</p>
+              <p className="text-neutral-400 text-xs">{currentStation.language} · {currentStation.country}</p>
+            </div>
+            <button
+              onClick={stopStation}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              <MdPause className="text-white" size={20} />
+            </button>
+          </div>
+        )}
+
+        {/* ── Favourites Strip ── */}
+        {favorites && favorites.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-white font-bold mb-3 flex items-center gap-2">
+              <MdFavorite className="text-fuchsia-400" size={18} /> Favourites
+            </h2>
+            <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+              {favorites.map(station => (
+                <button
+                  key={station.stationuuid}
+                  onClick={() => handlePlay(station)}
+                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all
+                    ${currentStation?.stationuuid === station.stationuuid && isPlaying
+                      ? "bg-fuchsia-600 border-fuchsia-600 text-white"
+                      : "bg-white/5 border-white/10 text-neutral-300 hover:border-fuchsia-500/40"
+                    }`}
+                >
+                  {currentStation?.stationuuid === station.stationuuid && isPlaying
+                    ? <MdPause size={14} /> : <MdPlayArrow size={14} />}
+                  {station.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Search ── */}
+        <div className="relative mb-5">
+          <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={20} />
+          <input
+            type="text"
+            placeholder="Search by station, language, genre…"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-10 text-white placeholder-neutral-500 focus:outline-none focus:border-fuchsia-500/50 text-sm"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white">
+              <MdClear size={18} />
+            </button>
           )}
         </div>
 
-        {/* Favorites Section */}
-        {radioContext.favorites.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-white mb-4">Favorites</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {radioContext.favorites.map((station) => (
-                <div
-                  key={`favorite-${station.stationuuid}`}
-                  className="bg-neutral-900/50 rounded-lg p-4 border border-neutral-800 hover:border-fuchsia-500/50 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-white truncate">{station.name}</h3>
-                      {station.genre && (
-                        <p className="text-sm text-neutral-400 truncate">{station.genre}</p>
-                      )}
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Favorite button clicked', token, station);
-                        if (!token) {
-                          toast.info('Please log in to add favorites.');
-                          return;
-                        }
-                        toggleFavorite(station);
-                      }}
-                      className="p-1 hover:bg-white/10 rounded-full ml-2"
-                    >
-                      {isFavorite(station) ? (
-                        <MdFavorite className="text-fuchsia-500" size={20} />
-                      ) : (
-                        <MdFavoriteBorder className="text-neutral-400" size={20} />
-                      )}
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-neutral-400">
-                      {station.bitrate && (
-                        <span className="flex items-center gap-1">
-                          <MdSpeed size={14} />
-                          {station.bitrate}kbps
-                        </span>
-                      )}
-                      {station.codec && (
-                        <span className="flex items-center gap-1">
-                          <MdCode size={14} />
-                          {station.codec}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handlePlayPause(station)}
-                      className={`p-2 rounded-full ${
-                        localPlayingState[station.stationuuid]
-                          ? 'bg-fuchsia-500'
-                          : 'bg-neutral-700 hover:bg-neutral-600'
-                      }`}
-                    >
-                      {localPlayingState[station.stationuuid] ? (
-                        <MdPause className="text-white" size={20} />
-                      ) : (
-                        <MdPlayArrow className="text-white" size={20} />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Pinned Genres Section */}
-        {pinnedGenres.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-white mb-4">Pinned Genres</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {pinnedGenres.map((genre) => (
-                <div
-                  key={`pinned-${genre}`}
-                  className="bg-neutral-900/50 rounded-lg p-4 border border-neutral-800"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">{genre}</h3>
-                    <button
-                      onClick={() => togglePinGenre(genre)}
-                      className="p-1 hover:bg-white/10 rounded-full"
-                    >
-                      <MdStar className="text-yellow-400" size={20} />
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {groupedStations[genre]?.slice(0, 3).map((station) => (
-                      <div
-                        key={station.stationuuid}
-                        className="flex items-center justify-between p-2 bg-neutral-800/50 rounded-lg"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <span className="text-white truncate">{station.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => togglePinGenre(station)}
-                            className="p-1 hover:bg-white/10 rounded-full"
-                          >
-                            <MdStarBorder className="text-neutral-400" size={16} />
-                          </button>
-                          <button
-                            onClick={() => handlePlayPause(station)}
-                            className={`p-2 rounded-full ${
-                              localPlayingState[station.stationuuid]
-                                ? 'bg-fuchsia-500'
-                                : 'bg-neutral-700 hover:bg-neutral-600'
-                            }`}
-                          >
-                            {localPlayingState[station.stationuuid] ? (
-                              <MdPause className="text-white" size={16} />
-                            ) : (
-                              <MdPlayArrow className="text-white" size={16} />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className="relative">
-            <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" size={24} />
-            <input
-              type="text"
-              placeholder="Search stations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg py-3 pl-12 pr-4 text-white placeholder-neutral-400 focus:outline-none focus:border-fuchsia-500/50"
-            />
-          </div>
+        {/* ── Genre Tabs ── */}
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-8 no-scrollbar">
+          {tabs.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveGenre(tab)}
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all border
+                ${activeGenre === tab
+                  ? "bg-fuchsia-600 border-fuchsia-600 text-white"
+                  : "bg-white/5 border-white/10 text-neutral-300 hover:border-white/20"
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {/* Stations by Genre */}
-        <AnimatePresence>
-          {Object.entries(groupedStations).map(([genre, stations]) => {
-            const filteredStations = filterStations(stations);
-            const visibleStations = expandedStations[genre] 
-              ? filteredStations 
-              : filteredStations.slice(0, STATIONS_PER_PAGE);
-
-            if (filteredStations.length === 0) return null;
-
+        {/* ── Station Grid by Genre ── */}
+        {Object.entries(grouped).length === 0 ? (
+          <div className="text-center py-20 text-neutral-500">
+            <MdRadio size={48} className="mx-auto mb-4 opacity-30" />
+            <p>No stations found for "{searchQuery}"</p>
+          </div>
+        ) : (
+          Object.entries(grouped).map(([genre, stations]) => {
+            const colors = GENRE_COLORS[genre] || GENRE_COLORS["International"];
             return (
-              <div 
-                key={genre} 
-                id={`genre-${genre}`}
-                className="mb-8 border border-neutral-800 rounded-lg overflow-hidden"
-              >
-                {/* Genre Header */}
-                <div 
-                  className="flex items-center justify-between p-4 bg-neutral-900 cursor-pointer"
-                  onClick={() => toggleGenreExpanded(genre)}
-                >
-                  <h2 className="text-xl font-bold text-white">{genre} ({filteredStations.length})</h2>
-                  <div
-                    className={`${expandedGenres[genre] ? 'rotate-180' : ''}`}
-                  >
-                    {expandedGenres[genre] ? <MdExpandMore size={24} /> : <MdChevronRight size={24} />}
-                  </div>
+              <div key={genre} className="mb-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className={`px-3 py-1 rounded-full text-white text-xs font-bold ${colors.badge}`}>{genre}</span>
+                  <span className="text-neutral-500 text-sm">{stations.length} station{stations.length !== 1 ? "s" : ""}</span>
                 </div>
-
-                {/* Stations List */}
-                <AnimatePresence initial={false}>
-                  {expandedGenres[genre] && (
-                    <div className="px-4 py-2">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {visibleStations.map((station) => {
-                          const isStationPlaying = currentStation?.stationuuid === station.stationuuid && isPlaying;
-                          const isThisStationLoading = isLoading && currentStation?.stationuuid === station.stationuuid;
-
-                          return (
-                            <div
-                              key={station.stationuuid}
-                              className="bg-neutral-900/50 backdrop-blur-md rounded-xl p-4 border border-white/5 hover:border-fuchsia-500/20 transition-colors cursor-pointer"
-                              onClick={() => handlePlayPause(station)}
-                            >
-                              <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-fuchsia-600/20 rounded-lg flex items-center justify-center flex-shrink-0 relative">
-                                  {isStationPlaying ? (
-                                    <>
-                                      <div className="w-full h-full flex items-center justify-center bg-fuchsia-600/20 rounded-lg">
-                                        <MdMusicNote className="text-fuchsia-500" size={24} />
-                                      </div>
-                                      <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">
-                                        LIVE
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-fuchsia-600/20 rounded-lg">
-                                      <MdMusicNote className="text-fuchsia-500" size={24} />
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-white truncate">{station.name}</h3>
-                                  {station.genre && (
-                                    <p className="text-sm text-neutral-400 truncate">{station.genre}</p>
-                                  )}
-                                  
-                                  {/* Station Metadata */}
-                                  <div className="mt-2 space-y-1">
-                                    {station.language && (
-                                      <div className="flex items-center gap-1 text-xs text-neutral-400">
-                                        <MdLanguage size={14} />
-                                        <span>{station.language}</span>
-                                      </div>
-                                    )}
-                                    {station.bitrate && (
-                                      <div className="flex items-center gap-1 text-xs text-neutral-400">
-                                        <MdSpeed size={14} />
-                                        <span>{station.bitrate}kbps</span>
-                                      </div>
-                                    )}
-                                    {station.codec && (
-                                      <div className="flex items-center gap-1 text-xs text-neutral-400">
-                                        <MdCode size={14} />
-                                        <span>{station.codec}</span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="flex flex-col items-end gap-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      console.log('Favorite button clicked', token, station);
-                                      if (!token) {
-                                        toast.info('Please log in to add favorites.');
-                                        return;
-                                      }
-                                      toggleFavorite(station);
-                                    }}
-                                    className="p-1 hover:bg-white/10 rounded-full"
-                                  >
-                                    {isFavorite(station) ? (
-                                      <MdFavorite className="text-fuchsia-500" size={20} />
-                                    ) : (
-                                      <MdFavoriteBorder className="text-neutral-400" size={20} />
-                                    )}
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handlePlayPause(station);
-                                    }}
-                                    className={`p-2 rounded-full ${
-                                      isStationPlaying
-                                        ? 'bg-fuchsia-500'
-                                        : 'bg-neutral-800 hover:bg-neutral-700'
-                                    }`}
-                                  >
-                                    {isThisStationLoading ? (
-                                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    ) : isStationPlaying ? (
-                                      <MdPause className="text-white" size={24} />
-                                    ) : (
-                                      <MdPlayArrow className="text-white" size={24} />
-                                    )}
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      
-                      {/* Show More Button */}
-                      {filteredStations.length > STATIONS_PER_PAGE && (
-                        <div className="mt-4 flex justify-center">
-                          <button
-                            onClick={() => toggleShowMore(genre)}
-                            className="px-4 py-2 bg-fuchsia-500/10 text-fuchsia-500 rounded-lg hover:bg-fuchsia-500/20 transition-colors"
-                          >
-                            {expandedStations[genre] ? 'Show Less' : 'Show More'}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </AnimatePresence>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {stations.map(station => (
+                    <StationCard
+                      key={station.stationuuid}
+                      station={station}
+                      isActive={currentStation?.stationuuid === station.stationuuid && isPlaying}
+                      isLoading={isLoading && currentStation?.stationuuid === station.stationuuid}
+                      onPlay={handlePlay}
+                      onFavorite={handleFav}
+                      favorited={isFavorite ? isFavorite(station) : false}
+                    />
+                  ))}
+                </div>
               </div>
             );
-          })}
-        </AnimatePresence>
+          })
+        )}
       </div>
-
-      {/* Premium Radio Player */}
-      {currentStation && isPlaying && <PremiumRadioPlayer />}
     </div>
   );
 };
 
-export default RadioStation; 
+export default RadioStation;
