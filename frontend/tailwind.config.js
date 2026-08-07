@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         black: "#0a0a0a",
         "black-true": "#000",
