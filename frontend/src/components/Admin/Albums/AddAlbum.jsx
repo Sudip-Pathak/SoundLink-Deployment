@@ -5,7 +5,8 @@ import axios from "axios";
 import { AnimatePresence } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../Skeleton';
-const url = import.meta.env.VITE_BACKEND_URL;
+import { API_BASE_URL } from '../../../utils/api';
+const url = API_BASE_URL;
 
 const AddAlbum = ({ token }) => {
   const navigate = useNavigate();

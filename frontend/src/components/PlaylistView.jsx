@@ -7,6 +7,7 @@ import { MdPlayArrow, MdPause, MdFavorite, MdFavoriteBorder, MdPlaylistAdd, MdQu
 import { motion } from 'framer-motion';
 import Skeleton from './Skeleton';
 import AddToPlaylistModal from './AddToPlaylistModal';
+import { API_BASE_URL } from '../utils/api';
 
 const PlaylistView = () => {
   const { id } = useParams();
@@ -28,7 +29,7 @@ const PlaylistView = () => {
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   useEffect(() => {
     fetchPlaylist();

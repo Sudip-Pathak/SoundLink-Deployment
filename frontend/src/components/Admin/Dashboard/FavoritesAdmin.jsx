@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from '../../../utils/api';
 
 const FavoritesAdmin = ({ token }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   useEffect(() => {
     fetchFavorites();

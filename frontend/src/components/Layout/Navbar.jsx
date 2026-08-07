@@ -9,6 +9,7 @@ import { MdRadio } from 'react-icons/md';
 import LazyImage from '../LazyImage';
 import YouTubeService from '../../utils/youtubeService';
 import SearchResultsSection from '../SearchResultsSection';
+import { API_BASE_URL } from '../../utils/api';
 
 // Default avatar path - ensure this SVG file exists in the public directory
 const DEFAULT_AVATAR = '/default-avatar.svg';
@@ -113,7 +114,7 @@ const Navbar = (props) => {
 
         try {
             // Regular database search
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+            const backendUrl = API_BASE_URL;
             const response = await axios.get(`${backendUrl}/api/search?q=${encodeURIComponent(search)}`);
             
             if (response.data.success) {
@@ -222,7 +223,7 @@ const Navbar = (props) => {
         
         // If it's a local path starting with /uploads, prepend the backend URL
         if (avatarUrl.startsWith('/uploads')) {
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+            const backendUrl = API_BASE_URL;
             return `${backendUrl}${avatarUrl}`;
         }
         
@@ -232,7 +233,7 @@ const Navbar = (props) => {
         }
         
         // For other relative paths, also prepend backend URL
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         return `${backendUrl}${avatarUrl}`;
     };
 

@@ -4,7 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../Skeleton';
-const url = import.meta.env.VITE_BACKEND_URL;
+import { API_BASE_URL } from '../../../utils/api';
+const url = API_BASE_URL;
 
 const AddMovieAlbum = ({ token }) => {
   const navigate = useNavigate();

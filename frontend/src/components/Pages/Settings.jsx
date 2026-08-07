@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaSun, FaMoon, FaBell, FaBellSlash, FaLock, FaCheck, FaEye, FaEyeSlash, FaVolumeUp, FaVolumeMute, FaYoutube } from 'react-icons/fa';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 
 const Settings = ({ useYouTubePlayer, setUseYouTubePlayer }) => {
   const { token } = useContext(AuthContext);
@@ -26,7 +27,7 @@ const Settings = ({ useYouTubePlayer, setUseYouTubePlayer }) => {
       
       setIsLoading(true);
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         // You may need to create this endpoint in your backend
         const response = await axios.get(`${backendUrl}/api/user/settings`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -51,7 +52,7 @@ const Settings = ({ useYouTubePlayer, setUseYouTubePlayer }) => {
     
     setIsLoading(true);
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       // You may need to create this endpoint in your backend
       const response = await axios.post(
         `${backendUrl}/api/user/settings`,

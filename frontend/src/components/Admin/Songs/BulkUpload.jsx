@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Skeleton from '../../Skeleton';
+import { API_BASE_URL } from '../../../utils/api';
 
 const BulkUpload = ({ token, type }) => {
   const [json, setJson] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   const handleUpload = async (e) => {
     e.preventDefault();

@@ -50,6 +50,7 @@ import RadioStation from './components/RadioStation';
 import PremiumRadioPlayer from './components/Player/PremiumRadioPlayer';
 import SongDetail from './components/SongDetail';
 import ResetPasswordForm from "./components/ResetPasswordForm";
+import { API_BASE_URL } from './utils/api';
 
 // Protected route component that requires authentication
 const ProtectedRoute = ({ children }) => {
@@ -236,7 +237,7 @@ const App = () => {
 
     const checkBackendStatus = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await fetch(`${backendUrl}/api/health`);
         if (response.ok) {
           setBackendStatus('ready');

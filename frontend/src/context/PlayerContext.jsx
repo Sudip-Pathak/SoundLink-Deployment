@@ -591,7 +591,7 @@ export const PlayerContextProvider = ({ children }) => {
     if (!selectedTrack) {
       try {
         console.log('Track not found in songsData, fetching from API');
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await axios.get(`${backendUrl}/api/songs/${id}`);
         if (response.data.success) {
           selectedTrack = response.data.song;

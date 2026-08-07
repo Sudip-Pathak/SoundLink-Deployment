@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import Skeleton from '../Skeleton';
+import { API_BASE_URL } from '../../utils/api';
 
 const TrendingSongs = () => {
   const { playWithId, track, playStatus, toggleFavorite, favorites, addToQueue } = useContext(PlayerContext);
@@ -22,7 +23,7 @@ const TrendingSongs = () => {
     const fetchTrendingSongs = async () => {
       try {
         setLoading(true);
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await fetch(`${backendUrl}/api/song/list?all=true`);
         const data = await response.json();
         

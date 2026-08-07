@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { FaArrowLeft, FaPlay, FaHeart, FaRegHeart, FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { API_BASE_URL } from '../utils/api';
 
 const SongDetail = () => {
   const { id } = useParams();
@@ -20,7 +21,7 @@ const SongDetail = () => {
   useEffect(() => {
     const fetchSongData = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await axios.get(`${backendUrl}/api/song/${id}`);
         if (response.data.success) {
           setSong(response.data.song);
@@ -42,7 +43,7 @@ const SongDetail = () => {
     const fetchPlaylists = async () => {
       if (!token) return;
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await axios.get(`${backendUrl}/api/playlists`, {
           headers: { Authorization: `Bearer ${token}` }
         });

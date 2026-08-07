@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import "../../styles/MobileStyles.css"; // Import mobile-specific styles
 import SEO from '../SEO'; // Import SEO component
 import Footer from '../Layout/Footer'; // Import Footer component
+import { API_BASE_URL } from '../../utils/api';
 
 // Cache configuration
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -126,7 +127,7 @@ const DisplayHome = () => {
       }
 
       setLoading(true);
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       
       const [movieRes, songsRes, artistsRes] = await Promise.all([
         axios.get(`${backendUrl}/api/moviealbum/list`),

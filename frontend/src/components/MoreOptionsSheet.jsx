@@ -18,6 +18,7 @@ import {
   MdAdd
 } from 'react-icons/md';
 import axios from 'axios';
+import { API_BASE_URL } from '../utils/api';
 
 const MoreOptionsSheet = ({ isOpen, onClose, trackId }) => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const MoreOptionsSheet = ({ isOpen, onClose, trackId }) => {
       }
 
       // Fetch artists list to find the correct artist ID
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       const response = await axios.get(`${backendUrl}/api/artist/list`);
       
       if (response.data.success) {
@@ -137,7 +138,7 @@ const MoreOptionsSheet = ({ isOpen, onClose, trackId }) => {
         return;
       }
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       
       // First try regular albums
       console.log('Fetching regular albums...');

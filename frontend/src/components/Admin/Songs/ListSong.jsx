@@ -3,8 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdFileUpload, MdDownload } from "react-icons/md";
+import { API_BASE_URL } from '../../../utils/api';
 
-const url = import.meta.env.VITE_BACKEND_URL;
+const url = API_BASE_URL;
 
 // Component to handle LRC file export
 const ExportLrcFile = ({ lyrics, songName }) => {

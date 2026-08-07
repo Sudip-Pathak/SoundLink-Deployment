@@ -4,6 +4,7 @@ import { MdPerson, MdSearch, MdClear, MdArrowBack } from 'react-icons/md';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import Skeleton from '../Skeleton';
+import { API_BASE_URL } from '../../utils/api';
 
 const Artists = () => {
   const [artists, setArtists] = useState([]);
@@ -15,7 +16,7 @@ const Artists = () => {
     const fetchArtists = async () => {
       try {
         setLoading(true);
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const response = await fetch(`${backendUrl}/api/artist/list`);
         const data = await response.json();
         

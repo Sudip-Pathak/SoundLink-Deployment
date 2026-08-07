@@ -4,6 +4,7 @@ import { FaFire, FaRegClock, FaUser, FaVideo, FaMusic, FaChartBar, FaThLarge, Fa
 import { MdRadio } from 'react-icons/md';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 
 const Sidebar = ({ mobileOpen, setMobileOpen }) => {
   const { user, token } = useContext(AuthContext);
@@ -11,7 +12,7 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
   const location = useLocation();
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(false);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   // Function to handle navigation and close sidebar on mobile
   const handleNavigate = (path) => {

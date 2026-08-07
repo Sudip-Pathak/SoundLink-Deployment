@@ -15,6 +15,7 @@ import ListMovieAlbum from "../Albums/ListMovieAlbum";
 import AdminArtists from "../Artists/AdminArtists";
 import { MdMusicNote, MdArrowBack } from "react-icons/md";
 import Skeleton from '../../Skeleton';
+import { API_BASE_URL } from '../../../utils/api';
 
 const adminActions = [
   { label: "Add Song", key: "addSong" },
@@ -32,7 +33,7 @@ const AdminDashboard = ({ token }) => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
   const navigate = useNavigate();
 
   useEffect(() => {

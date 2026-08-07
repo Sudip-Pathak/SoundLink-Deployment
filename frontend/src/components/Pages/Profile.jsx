@@ -4,6 +4,7 @@ import AdminDashboard from "../Admin/Dashboard/AdminDashboard";
 import axios from 'axios';
 import Skeleton from '../Skeleton';
 import LazyImage from '../LazyImage';
+import { API_BASE_URL } from '../../utils/api';
 
 const Profile = () => {
   const { user, updateUserData } = useContext(AuthContext);
@@ -40,7 +41,7 @@ const Profile = () => {
       } 
       // Handle local uploads by prepending backend URL
       else if (avatarUrl && avatarUrl.startsWith('/uploads')) {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         const fullUrl = `${backendUrl}${avatarUrl}`;
         console.log("Using local upload URL:", fullUrl);
         setPreview(fullUrl);
@@ -126,7 +127,7 @@ const Profile = () => {
         return;
       }
       
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       console.log('Using backend URL:', backendUrl);
       
       console.log('Sending profile update request...');

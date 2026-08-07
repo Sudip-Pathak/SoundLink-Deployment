@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
 import axios from "axios";
+import { API_BASE_URL } from '../utils/api';
 
 const ResetPasswordForm = () => {
   const { token } = useParams();
@@ -35,7 +36,7 @@ const ResetPasswordForm = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password`, {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
         token,
         password: formData.password,
       });

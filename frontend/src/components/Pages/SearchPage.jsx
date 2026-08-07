@@ -10,6 +10,7 @@ import SEO from '../SEO';
 import AccessibleFormInput from '../AccessibleFormInput';
 import AccessibleIconButton from '../AccessibleIconButton';
 import Skeleton from '../Skeleton';
+import { API_BASE_URL } from '../../utils/api';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
@@ -64,7 +65,7 @@ const SearchPage = () => {
     setLoading(true);
     
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = API_BASE_URL;
       const response = await axios.get(`${backendUrl}/api/search?q=${encodeURIComponent(searchTerm)}`);
       
       if (response.data.success) {

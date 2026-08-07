@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API_BASE_URL } from '../../../utils/api';
 
-const url = import.meta.env.VITE_BACKEND_URL;
+const url = API_BASE_URL;
 
 const ListAlbum = () => {
   const [data, setData] = useState([]);

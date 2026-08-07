@@ -9,6 +9,7 @@ import { FaPlus, FaPlay, FaPause, FaHeart, FaEllipsisV, FaShare, FaLink } from '
 import { motion } from 'framer-motion';
 import "./SongItem.css";
 import Skeleton from './Skeleton';
+import { API_BASE_URL } from '../utils/api';
 
 const SongItem = ({ name, image, desc, id }) => {
   const { playWithId, playStatus, track, toggleFavorite, isFavorite, play, pause } = useContext(PlayerContext);
@@ -18,7 +19,7 @@ const SongItem = ({ name, image, desc, id }) => {
   const [loading, setLoading] = useState(false);
   const [newPlaylist, setNewPlaylist] = useState("");
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   // Double tap detection
   const tapTimeoutRef = useRef(null);

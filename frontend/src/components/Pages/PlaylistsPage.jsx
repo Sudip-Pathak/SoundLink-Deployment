@@ -13,6 +13,7 @@ import {
 import { FaPlay, FaHeadphones } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Skeleton from '../Skeleton';
+import { API_BASE_URL } from '../../utils/api';
 
 const PlaylistsPage = () => {
   const { user, token } = useContext(AuthContext);
@@ -23,7 +24,7 @@ const PlaylistsPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+  const url = API_BASE_URL;
 
   // Redirect to login if user is not authenticated
   useEffect(() => {

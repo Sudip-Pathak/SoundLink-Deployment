@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { API_BASE_URL } from '../../../utils/api';
 
 const AnalyticsChart = ({ token }) => {
   const [data, setData] = useState([]);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   useEffect(() => {
     fetchAnalytics();

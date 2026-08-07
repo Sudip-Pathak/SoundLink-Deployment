@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from '../../../utils/api';
 
 const SearchAdmin = ({ token }) => {
   const [q, setQ] = useState("");
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   const handleSearch = async (e) => {
     e.preventDefault();

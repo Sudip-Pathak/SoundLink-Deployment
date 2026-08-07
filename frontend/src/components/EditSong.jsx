@@ -5,7 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { PlayerContext } from "../context/PlayerContext";
 import Skeleton from './Skeleton';
-const url = import.meta.env.VITE_BACKEND_URL;
+import { API_BASE_URL } from '../utils/api';
+const url = API_BASE_URL;
 
 // Add export functionality
 const ExportLrcFile = ({ lyrics, songName }) => {

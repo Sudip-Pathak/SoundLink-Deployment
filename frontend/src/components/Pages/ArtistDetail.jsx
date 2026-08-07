@@ -8,6 +8,7 @@ import { PlayerContext } from "../../context/PlayerContext";
 import AddToPlaylistModal from "../AddToPlaylistModal";
 import "../../styles/MobileStyles.css"; // Import mobile-specific styles
 import Skeleton from "../Skeleton";
+import { API_BASE_URL } from '../../utils/api';
 
 const ArtistDetail = () => {
   const { id } = useParams();
@@ -169,7 +170,7 @@ const ArtistDetail = () => {
     const fetchArtistData = async () => {
       try {
         setLoading(true);
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = API_BASE_URL;
         
         // Fetch artist details
         const artistRes = await axios.get(`${backendUrl}/api/artist/${id}`);

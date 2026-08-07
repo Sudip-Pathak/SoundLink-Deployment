@@ -3,8 +3,29 @@
  * This file provides a single source of truth for API URL configuration
  */
 
-// Get the backend URL from environment variables with a fallback for development
-export const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+// Production backend URL - used as fallback and for deployed environments
+const PRODUCTION_BACKEND = 'https://soundlink-by-sudip.onrender.com';
+
+/**
+ * Resolve the backend URL intelligently:
+ * - In production builds, always use the production backend
+ * - In development, use the env variable if set, otherwise fallback to production
+ */
+function resolveBackendUrl() {
+  const envUrl = import.meta.env.VITE_BACKEND_URL;
+
+  // If no env variable is set, use production
+  if (!envUrl) return PRODUCTION_BACKEND;
+
+  // In production builds, if env var still points to localhost, override to production
+  if (import.meta.env.PROD && envUrl.includes('localhost')) {
+    return PRODUCTION_BACKEND;
+  }
+
+  return envUrl;
+}
+
+export const API_BASE_URL = resolveBackendUrl();
 
 // Helper function to construct API URLs
 export const getApiUrl = (endpoint) => {
@@ -72,20 +93,3 @@ export const fetchWithRetry = async (url, options = {}, maxRetries = 2) => {
   // All retries failed
   throw lastError || new Error(`Failed to fetch ${url} after ${maxRetries} retries`);
 };
-
-// Example usage:
-// import { getApiUrl, getAuthHeaders, fetchWithRetry } from '../utils/api';
-// const fetchData = async () => {
-//   try {
-//     const response = await fetchWithRetry(
-//       getApiUrl('api/song/list'), 
-//       { headers: getAuthHeaders(token) }
-//     );
-//     if (response.ok) {
-//       const data = await response.json();
-//       return data;
-//     }
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//   }
-// }; 

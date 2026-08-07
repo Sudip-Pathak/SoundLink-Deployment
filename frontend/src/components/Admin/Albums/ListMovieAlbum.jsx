@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MdMovie, MdDelete, MdEdit, MdClose } from 'react-icons/md';
+import { API_BASE_URL } from '../../../utils/api';
 
 const ListMovieAlbum = ({ onCloseModal }) => {
   const [movieAlbums, setMovieAlbums] = useState([]);
@@ -15,7 +16,7 @@ const ListMovieAlbum = ({ onCloseModal }) => {
     genre: ''
   });
 
-  const url = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+  const url = API_BASE_URL;
 
   useEffect(() => {
     fetchMovieAlbums();

@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from '../utils/api';
 
 const PlaylistManager = () => {
   const { user, token } = useContext(AuthContext);
   const [playlists, setPlaylists] = useState([]);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const url = API_BASE_URL;
 
   useEffect(() => {
     if (user) fetchPlaylists();

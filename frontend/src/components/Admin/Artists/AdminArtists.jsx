@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { AuthContext } from '../../../context/AuthContext';
 import { MdAdd, MdEdit, MdDelete, MdPerson, MdSearch, MdClear } from 'react-icons/md';
 import Skeleton from '../../Skeleton';
+import { API_BASE_URL } from '../../../utils/api';
 
 const AdminArtists = () => {
   const { token } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const AdminArtists = () => {
   });
   const [previewImage, setPreviewImage] = useState(null);
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+  const backendUrl = API_BASE_URL;
 
   useEffect(() => {
     fetchArtists();

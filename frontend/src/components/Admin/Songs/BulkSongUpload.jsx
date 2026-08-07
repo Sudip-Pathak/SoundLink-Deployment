@@ -4,7 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { parseBlob } from 'music-metadata-browser';
 import { AuthContext } from "../../../context/AuthContext";
-const url = import.meta.env.VITE_BACKEND_URL;
+import { API_BASE_URL } from '../../../utils/api';
+const url = API_BASE_URL;
 
 // Export functionality for LRC files
 const ExportLrcButton = ({ lyrics, songTitle }) => {
